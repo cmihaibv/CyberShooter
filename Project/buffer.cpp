@@ -8,7 +8,7 @@ Buffer::Buffer()
 	m_vertexShader = 0;
 }
 
-Buffer::Buffer(const Buffer&)
+Buffer::Buffer(const Buffer& other)
 {
 }
 

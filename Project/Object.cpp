@@ -98,7 +98,7 @@ bool Object::InitializeBuffers(ID3D11Device* device)
 	for (i = 0; i < m_vertexCount; i++)
 	{
 		vertices[i].position = DirectX::XMFLOAT3(m_model[i].x, m_model[i].y, m_model[i].z);
-		vertices[i].color = DirectX::XMFLOAT4(m_model[i].r, m_model[i].g, m_model[i].b, 1.0f);
+		vertices[i].color = DirectX::XMFLOAT4(m_model[i].r, m_model[i].g, m_model[i].b, m_model[i].a);
 		vertices[i].normal = DirectX::XMFLOAT3(m_model[i].nx, m_model[i].ny, m_model[i].nz);
 
 		indices[i] = i;
@@ -246,9 +246,9 @@ bool Object::LoadModel(const char*filename)
 	// Read in the vertex data.
 	for (i = 0; i < m_vertexCount; i++)
 	{
+		
 		fin >> m_model[i].x >> m_model[i].y >> m_model[i].z;
-		fin >> m_model[i].r >> m_model[i].g >>m_model[i].b;
-
+		fin >> m_model[i].r >> m_model[i].g >> m_model[i].b;	m_model[i].a = 1.0f;
 		fin >> m_model[i].nx >> m_model[i].ny >> m_model[i].nz;
 	}
 

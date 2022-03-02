@@ -61,6 +61,12 @@ bool GraphicsClass::Initialize(int screenHeight, int screenWidth, HWND hwnd)
 		MessageBox(hwnd, L"Could not initialize the model object22.", L"Error", MB_OK);
 		return false;
 	}
+
+	m_ColorShader = new Buffer;
+	if (!m_ColorShader)
+	{
+		return false;
+	}
 	result = m_ColorShader->Initialize(m_D3DXRenderer->GetDevice(), hwnd);
 	if (!result)
 	{
@@ -113,9 +119,19 @@ bool GraphicsClass::Frame()
 {
 	bool result;
 
+	static float rotation = 0.0f;
+
+
+	// Update the rotation variable each frame.
+	rotation += (float)DirectX::XM_PI * 0.01f;
+	if (rotation > 360.0f)
+	{
+		rotation -= 360.0f;
+	}
+
 
 	// Render the graphics scene.
-	result = Render();
+	result = Render(rotation);
 	if (!result)
 	{
 		return false;
@@ -125,7 +141,7 @@ bool GraphicsClass::Frame()
 }
 
 
-bool GraphicsClass::Render()
+bool GraphicsClass::Render(float rotation)
 {
 
 	DirectX::XMFLOAT4X4 worldMatrix, projectionsMatrix;

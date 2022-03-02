@@ -25,7 +25,7 @@ public:
 	bool Frame();
 
 private:
-	bool Render();
+	bool Render(float);
 	Renderer* m_D3DXRenderer;
 	Object* m_Model;
 	Buffer* m_ColorShader;
