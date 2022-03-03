@@ -7,7 +7,7 @@
 
 
 #include <windows.h>
-#include "graphicsclass.h"
+#include "Graphics.h"
 #include "inputclass.h"
 
 

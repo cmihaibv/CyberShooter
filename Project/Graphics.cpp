@@ -1,5 +1,5 @@
 
-#include "graphicsclass.h"
+#include "Graphics.h"
 
 
 GraphicsClass::GraphicsClass()
@@ -149,7 +149,7 @@ bool GraphicsClass::Render(float rotation)
 
 	bool result;
 	// Clear the buffers to begin the scene.
-	m_D3DXRenderer->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
+	m_D3DXRenderer->BeginScene(1.0f, 1.0f, 0.0f, 1.0f);
 
 	m_Camera->Render();
 
