@@ -1,28 +1,18 @@
-////////////////////////////////////////////////////////////////////////////////
-// Filename: modelclass.h
-////////////////////////////////////////////////////////////////////////////////
 #ifndef _MODELCLASS_H_
 #define _MODELCLASS_H_
 
 
-//////////////
-// INCLUDES //
-//////////////
 #include <d3d11.h>
 #include <DirectXMath.h>
 #include <fstream>
 using namespace std;
 using namespace DirectX;
 
-///////////////////////
-// MY CLASS INCLUDES //
-///////////////////////
+
 #include "textureclass.h"
 
 
-////////////////////////////////////////////////////////////////////////////////
-// Class name: ModelClass
-////////////////////////////////////////////////////////////////////////////////
+
 class ModelClass
 {
 private:
@@ -41,15 +31,17 @@ private:
 	};
 
 public:
+
 	ModelClass();
 	ModelClass(const ModelClass&);
 	~ModelClass();
 
-	bool Initialize(ID3D11Device*,const char*,const WCHAR*);
+	bool Initialize(ID3D11Device*, const char*, const WCHAR*,TextureClass*);
 	void Shutdown();
 	void Render(ID3D11DeviceContext*);
 
 	int GetIndexCount();
+	void SetTexture(TextureClass*);
 	ID3D11ShaderResourceView* GetTexture();
 
 

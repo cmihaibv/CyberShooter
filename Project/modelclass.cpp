@@ -1,6 +1,3 @@
-////////////////////////////////////////////////////////////////////////////////
-// Filename: modelclass.cpp
-////////////////////////////////////////////////////////////////////////////////
 #include "modelclass.h"
 
 
@@ -23,7 +20,7 @@ ModelClass::~ModelClass()
 }
 
 
-bool ModelClass::Initialize(ID3D11Device* device,const char* modelFilename,const WCHAR* textureFilename)
+bool ModelClass::Initialize(ID3D11Device* device,const char* modelFilename,const WCHAR* textureFilename,TextureClass* texture)
 {
 	bool result;
 
@@ -43,14 +40,17 @@ bool ModelClass::Initialize(ID3D11Device* device,const char* modelFilename,const
 	}
 
 	// Load the texture for this model.
-	result = LoadTexture(device, textureFilename);
-	if(!result)
-	{
-		return false;
-	}
+	//result = LoadTexture(device, textureFilename);
+	//if(!result)
+	//{
+	//	return false;
+	//}
+	
+	this->m_Texture = texture;
 
 	return true;
 }
+
 
 
 void ModelClass::Shutdown()
@@ -82,11 +82,20 @@ int ModelClass::GetIndexCount()
 	return m_indexCount;
 }
 
+void ModelClass::SetTexture(TextureClass* texture)
+{
+	m_Texture = texture;
+
+	return;
+}
 
 ID3D11ShaderResourceView* ModelClass::GetTexture()
 {
 	return m_Texture->GetTexture();
 }
+
+
+
 
 
 bool ModelClass::InitializeBuffers(ID3D11Device* device)

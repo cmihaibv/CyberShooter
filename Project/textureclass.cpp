@@ -3,10 +3,10 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "textureclass.h"
 
-
 TextureClass::TextureClass()
 {
 	m_texture = 0;
+
 }
 
 
@@ -20,12 +20,21 @@ TextureClass::~TextureClass()
 }
 
 
+
 bool TextureClass::Initialize(ID3D11Device* device,const WCHAR* filename)
 {
+	HRESULT hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+	if (FAILED(hr))
+	{
+		// error
+		return false;
+	}
+		
+
 	HRESULT result;
 	TexMetadata m_textMetaData;
 	ScratchImage m_image;
-
+	
 
 	// Load the texture
 	result = LoadFromDDSFile(filename, DDS_FLAGS_NONE, &m_textMetaData, m_image);
@@ -34,7 +43,7 @@ bool TextureClass::Initialize(ID3D11Device* device,const WCHAR* filename)
 		return false;
 	}
 
-	result = CreateShaderResourceView(device, NULL,NULL, m_textMetaData, &m_texture);
+	result = CreateShaderResourceView(device, m_image.GetImages(), m_image.GetImageCount(), m_textMetaData, &m_texture);
 	if (FAILED(result))
 	{
 		return false;

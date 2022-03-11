@@ -1,6 +1,3 @@
-////////////////////////////////////////////////////////////////////////////////
-// Filename: graphicsclass.cpp
-////////////////////////////////////////////////////////////////////////////////
 #include "graphicsclass.h"
 
 
@@ -37,7 +34,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Initialize the Direct3D object.
-	result = m_D3D->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR);
+	result = m_D3D->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FALSE, SCREEN_DEPTH, SCREEN_NEAR);
 	if(!result)
 	{
 		MessageBox(hwnd, L"Could not initialize Direct3D.", L"Error", MB_OK);
@@ -52,7 +49,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Set the initial position of the camera.
-	m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
+	m_Camera->SetPosition(0.0f, 0.0f, -2.0f);
 	
 	// Create the model object.
 	m_Model = new ModelClass;
@@ -61,8 +58,20 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
+	m_Texture = new TextureClass;
+	if (!m_Texture)
+	{
+		return false;
+	}
+
+	result = m_Texture->Initialize(m_D3D->GetDevice(), L"../Project/data/seafloor.dds");
+	if (!result)
+	{
+		return false;
+	}
+
 	// Initialize the model object.
-	result = m_Model->Initialize(m_D3D->GetDevice(), "../Engine/data/cube.txt", L"../Engine/data/seafloor.dds");
+	result = m_Model->Initialize(m_D3D->GetDevice(), "../Project/data/cube.txt", L"../Project/data/seafloor.dds", m_Texture);
 	if(!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
@@ -75,6 +84,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	{
 		return false;
 	}
+
 
 	// Initialize the light shader object.
 	result = m_LightShader->Initialize(m_D3D->GetDevice(), hwnd);
@@ -150,7 +160,7 @@ bool GraphicsClass::Frame()
 
 
 	// Update the rotation variable each frame.
-	rotation += (float)XM_PI * 0.01f;
+	rotation += (float)XM_PI * 0.001f;
 	if(rotation > 360.0f)
 	{
 		rotation -= 360.0f;

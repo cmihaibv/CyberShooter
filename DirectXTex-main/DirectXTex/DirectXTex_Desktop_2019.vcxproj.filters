@@ -12,33 +12,36 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <CLInclude Include="DirectXTex.h">
-      <Filter>Header Files</Filter>
-    </CLInclude>
-    <CLInclude Include="DirectXTex.inl">
-      <Filter>Header Files</Filter>
-    </CLInclude>
-    <ClCompile Include="BC4BC5.cpp">
+    <ClInclude Include="scoped.h">
       <Filter>Source Files</Filter>
-    </ClCompile>
+    </ClInclude>
+    <ClInclude Include="BC.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
     <ClInclude Include="BCDirectCompute.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <CLInclude Include="DDS.h">
+    <ClInclude Include="DDS.h">
       <Filter>Source Files</Filter>
-    </CLInclude>
-    <CLInclude Include="DirectXTexP.h">
+    </ClInclude>
+    <ClInclude Include="DirectXTexP.h">
       <Filter>Source Files</Filter>
-    </CLInclude>
+    </ClInclude>
     <ClInclude Include="filters.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <CLInclude Include="scoped.h">
-      <Filter>Source Files</Filter>
+    <CLInclude Include="DirectXTex.inl">
+      <Filter>Header Files</Filter>
     </CLInclude>
+    <ClInclude Include="DirectXTex.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BC.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BC4BC5.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="BC6HBC7.cpp">
@@ -63,6 +66,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DirectXTexFlipRotate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXTexHDR.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DirectXTexImage.cpp">
@@ -92,14 +98,6 @@
     <ClCompile Include="DirectXTexWIC.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DirectXTexHDR.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <CLInclude Include="BC.h">
-      <Filter>Source Files</Filter>
-    </CLInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\CompileShaders.cmd">
