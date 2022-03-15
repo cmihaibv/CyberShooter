@@ -5,6 +5,7 @@
 #include <d3d11.h>
 #include <DirectXMath.h>
 #include <fstream>
+#include "tiny_obj_loader.h"
 using namespace std;
 using namespace DirectX;
 
@@ -37,6 +38,7 @@ public:
 	~ModelClass();
 
 	bool Initialize(ID3D11Device*, const char*, const WCHAR*,TextureClass*);
+	
 	void Shutdown();
 	void Render(ID3D11DeviceContext*);
 
@@ -54,6 +56,7 @@ private:
 	void ReleaseTexture();
 
 	bool LoadModel(const char*);
+	bool LoadObj(const char*);
 	void ReleaseModel();
 
 private:
