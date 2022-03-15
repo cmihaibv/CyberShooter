@@ -96,8 +96,6 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <Library Include="Debug\Win32\Debug\DirectXTex.lib">
-      <Filter>Resource Files</Filter>
-    </Library>
+    <Library Include="Debug\DirectXTex.lib" />
   </ItemGroup>
 </Project>

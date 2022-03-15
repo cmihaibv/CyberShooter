@@ -1,4 +1,6 @@
 #include "modelclass.h"
+#define TINYOBJLOADER_IMPLEMENTATION
+#include "tiny_obj_loader.h"
 
 
 ModelClass::ModelClass()
@@ -45,11 +47,11 @@ bool ModelClass::Initialize(ID3D11Device* device,const char* modelFilename,const
 	//{
 	//	return false;
 	//}
-	result = LoadObj(modelFilename);
-	if(!result)
-	{
-		return false;
-	}
+	//result = LoadObj(modelFilename);
+	//if(!result)
+	//{
+	//	return false;
+	//}
 	
 	this->m_Texture = texture;
 
