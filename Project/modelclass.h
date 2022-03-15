@@ -16,18 +16,18 @@ using namespace DirectX;
 class ModelClass
 {
 private:
-	struct VertexType
+	struct DXVertexType
 	{
 		XMFLOAT3 position;
 		XMFLOAT2 texture;
 		XMFLOAT3 normal;
 	};
 
-	struct ModelType
+	struct NormalVertex
 	{
 		float x, y, z;
-		float tu, tv;
-		float nx, ny, nz;
+		float tu = 0 , tv = 0;
+		float nx = 0, ny = 0, nz = 0;
 	};
 
 public:
@@ -62,7 +62,7 @@ private:
 	ID3D11Buffer *m_vertexBuffer, *m_indexBuffer;
 	int m_vertexCount, m_indexCount;
 	TextureClass* m_Texture;
-	ModelType* m_model;
+	NormalVertex* m_model;
 };
 
 #endif

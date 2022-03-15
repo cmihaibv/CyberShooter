@@ -28,7 +28,12 @@ bool ModelClass::Initialize(ID3D11Device* device,const char* modelFilename,const
 
 
 	// Load in the model data,
-	result = LoadModel(modelFilename);
+	//result = LoadModel(modelFilename);
+	//if(!result)
+	//{
+	//	return false;
+	//}
+		result = LoadObj(modelFilename);
 	if(!result)
 	{
 		return false;
@@ -47,11 +52,7 @@ bool ModelClass::Initialize(ID3D11Device* device,const char* modelFilename,const
 	//{
 	//	return false;
 	//}
-	//result = LoadObj(modelFilename);
-	//if(!result)
-	//{
-	//	return false;
-	//}
+
 	
 	this->m_Texture = texture;
 
@@ -106,7 +107,7 @@ ID3D11ShaderResourceView* ModelClass::GetTexture()
 
 bool ModelClass::InitializeBuffers(ID3D11Device* device)
 {
-	VertexType* vertices;
+	DXVertexType* vertices;
 	unsigned long* indices;
 	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
     D3D11_SUBRESOURCE_DATA vertexData, indexData;
@@ -115,7 +116,7 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 
 
 	// Create the vertex array.
-	vertices = new VertexType[m_vertexCount];
+	vertices = new DXVertexType[m_vertexCount];
 	if(!vertices)
 	{
 		return false;
@@ -140,7 +141,7 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 
 	// Set up the description of the static vertex buffer.
     vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-    vertexBufferDesc.ByteWidth = sizeof(VertexType) * m_vertexCount;
+    vertexBufferDesc.ByteWidth = sizeof(DXVertexType) * m_vertexCount;
     vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     vertexBufferDesc.CPUAccessFlags = 0;
     vertexBufferDesc.MiscFlags = 0;
@@ -216,7 +217,7 @@ void ModelClass::RenderBuffers(ID3D11DeviceContext* deviceContext)
 
 
 	// Set vertex buffer stride and offset.
-	stride = sizeof(VertexType); 
+	stride = sizeof(DXVertexType);
 	offset = 0;
     
 	// Set the vertex buffer to active in the input assembler so it can be rendered.
@@ -234,9 +235,9 @@ void ModelClass::RenderBuffers(ID3D11DeviceContext* deviceContext)
 bool ModelClass::LoadObj(const char* filepath)
 {
 
-	std::string inputfile = "../Project/data/cornell_box.obj";
+	std::string inputfile = "../Project/data/cube.obj";
 	tinyobj::ObjReaderConfig reader_config;
-	reader_config.mtl_search_path = "./"; // Path to material files
+	reader_config.mtl_search_path = "../Project/data/"; // Path to material files
 
 	tinyobj::ObjReader reader;
 
@@ -255,8 +256,13 @@ bool ModelClass::LoadObj(const char* filepath)
 	auto& shapes = reader.GetShapes();
 	auto& materials = reader.GetMaterials();
 
+	
+	std::vector<NormalVertex> currmodel;
+
 	// Loop over shapes
 	for (size_t s = 0; s < shapes.size(); s++) {
+
+		m_vertexCount =8;
 		// Loop over faces(polygon)
 		size_t index_offset = 0;
 		for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++) {
@@ -264,32 +270,47 @@ bool ModelClass::LoadObj(const char* filepath)
 
 			// Loop over vertices in the face.
 			for (size_t v = 0; v < fv; v++) {
+				NormalVertex tempVertex;
 				// access to vertex
 				tinyobj::index_t idx = shapes[s].mesh.indices[index_offset + v];
 				tinyobj::real_t vx = attrib.vertices[3 * size_t(idx.vertex_index) + 0];
 				tinyobj::real_t vy = attrib.vertices[3 * size_t(idx.vertex_index) + 1];
 				tinyobj::real_t vz = attrib.vertices[3 * size_t(idx.vertex_index) + 2];
 
+				tempVertex.x = vx;
+				tempVertex.y = vy;
+				tempVertex.z = vz;
 				// Check if `normal_index` is zero or positive. negative = no normal data
 				if (idx.normal_index >= 0) {
 					tinyobj::real_t nx = attrib.normals[3 * size_t(idx.normal_index) + 0];
 					tinyobj::real_t ny = attrib.normals[3 * size_t(idx.normal_index) + 1];
 					tinyobj::real_t nz = attrib.normals[3 * size_t(idx.normal_index) + 2];
+
+					tempVertex.nx = nx;
+					tempVertex.ny = ny;
+					tempVertex.nz = nz;
+
 				}
 
 				// Check if `texcoord_index` is zero or positive. negative = no texcoord data
 				if (idx.texcoord_index >= 0) {
 					tinyobj::real_t tx = attrib.texcoords[2 * size_t(idx.texcoord_index) + 0];
 					tinyobj::real_t ty = attrib.texcoords[2 * size_t(idx.texcoord_index) + 1];
+
+					tempVertex.tu = tx;
+					tempVertex.tv = ty;
 				}
 
+				currmodel.push_back(tempVertex);
 			}
 			index_offset += fv;
-
 			// per-face material
-			shapes[s].mesh.material_ids[f];
+			/*shapes[s].mesh.material_ids[f];*/
 		}
 	}
+	m_indexCount = m_vertexCount;
+
+	return true;
 
 }
 
@@ -361,7 +382,7 @@ bool ModelClass::LoadModel(const char* filename)
 	m_indexCount = m_vertexCount;
 
 	// Create the model using the vertex count that was read in.
-	m_model = new ModelType[m_vertexCount];
+	m_model = new NormalVertex[m_vertexCount];
 	if(!m_model)
 	{
 		return false;
