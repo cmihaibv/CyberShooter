@@ -5,7 +5,6 @@
 #include <d3d11.h>
 #include <DirectXMath.h>
 #include <fstream>
-#include "tiny_obj_loader.h"
 using namespace std;
 using namespace DirectX;
 
