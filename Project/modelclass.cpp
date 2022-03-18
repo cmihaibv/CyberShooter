@@ -8,7 +8,6 @@ ModelClass::ModelClass()
 	m_vertexBuffer = 0;
 	m_indexBuffer = 0;
 	m_Texture = 0;
-	m_model = 0;
 }
 
 
@@ -26,13 +25,6 @@ bool ModelClass::Initialize(ID3D11Device* device,const char* modelFilename,const
 {
 	bool result;
 
-
-	// Load in the model data,
-	//result = LoadModel(modelFilename);
-	//if(!result)
-	//{
-	//	return false;
-	//}
 		result = LoadObj(modelFilename);
 	if(!result)
 	{
@@ -45,14 +37,6 @@ bool ModelClass::Initialize(ID3D11Device* device,const char* modelFilename,const
 	{
 		return false;
 	}
-
-	// Load the texture for this model.
-	//result = LoadTexture(device, textureFilename);
-	//if(!result)
-	//{
-	//	return false;
-	//}
-
 	
 	this->m_Texture = texture;
 
@@ -103,15 +87,10 @@ ID3D11ShaderResourceView* ModelClass::GetTexture()
 
 
 
-
-
 bool ModelClass::InitializeBuffers(ID3D11Device* device)
 {
 	DXVertexType* vertices;
 	unsigned long* indices;
-	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
-    D3D11_SUBRESOURCE_DATA vertexData, indexData;
-	HRESULT result;
 	int i;
 
 
@@ -139,45 +118,9 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 		indices[i] = i;
 	}
 
-	// Set up the description of the static vertex buffer.
-    vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-    vertexBufferDesc.ByteWidth = sizeof(DXVertexType) * m_vertexCount;
-    vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-    vertexBufferDesc.CPUAccessFlags = 0;
-    vertexBufferDesc.MiscFlags = 0;
-	vertexBufferDesc.StructureByteStride = 0;
-
-	// Give the subresource structure a pointer to the vertex data.
-    vertexData.pSysMem = vertices;
-	vertexData.SysMemPitch = 0;
-	vertexData.SysMemSlicePitch = 0;
-
-	// Now create the vertex buffer.
-    result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &m_vertexBuffer);
-	if(FAILED(result))
-	{
-		return false;
-	}
-
-	// Set up the description of the static index buffer.
-    indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-    indexBufferDesc.ByteWidth = sizeof(unsigned long) * m_indexCount;
-    indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-    indexBufferDesc.CPUAccessFlags = 0;
-    indexBufferDesc.MiscFlags = 0;
-	indexBufferDesc.StructureByteStride = 0;
-
-	// Give the subresource structure a pointer to the index data.
-    indexData.pSysMem = indices;
-	indexData.SysMemPitch = 0;
-	indexData.SysMemSlicePitch = 0;
-
-	// Create the index buffer.
-	result = device->CreateBuffer(&indexBufferDesc, &indexData, &m_indexBuffer);
-	if(FAILED(result))
-	{
-		return false;
-	}
+	// Initialize vertexBufferDesc and indexBufferDesc
+	VertexBufferDesc(device, sizeof(DXVertexType) * m_vertexCount, vertices);
+	IndexBufferDesc(device, sizeof(unsigned long) * m_indexCount, indices);
 
 	// Release the arrays now that the vertex and index buffers have been created and loaded.
 	delete [] vertices;
@@ -185,6 +128,65 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 
 	delete [] indices;
 	indices = 0;
+
+	return true;
+}
+
+bool ModelClass::VertexBufferDesc(ID3D11Device* device,int byte, DXVertexType* vertices)
+{
+	D3D11_BUFFER_DESC vertexBufferDesc;
+	D3D11_SUBRESOURCE_DATA vertexData;
+	HRESULT result;
+
+	// Set up the description of the static vertex buffer.
+	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	vertexBufferDesc.ByteWidth = byte;
+	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vertexBufferDesc.CPUAccessFlags = 0;
+	vertexBufferDesc.MiscFlags = 0;
+	vertexBufferDesc.StructureByteStride = 0;
+
+	// Give the subresource structure a pointer to the vertex data.
+	vertexData.pSysMem = vertices;
+	vertexData.SysMemPitch = 0;
+	vertexData.SysMemSlicePitch = 0;
+
+	// Now create the vertex buffer.
+	result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &m_vertexBuffer);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	return true;
+}
+
+bool ModelClass::IndexBufferDesc(ID3D11Device* device, int byte,unsigned long* indices)
+{
+	D3D11_BUFFER_DESC indexBufferDesc;
+	D3D11_SUBRESOURCE_DATA indexData;
+	HRESULT result;
+
+
+	// Set up the description of the static index buffer.
+	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	indexBufferDesc.ByteWidth = sizeof(unsigned long) * m_indexCount;
+	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	indexBufferDesc.CPUAccessFlags = 0;
+	indexBufferDesc.MiscFlags = 0;
+	indexBufferDesc.StructureByteStride = 0;
+
+	// Give the subresource structure a pointer to the index data.
+	indexData.pSysMem = indices;
+	indexData.SysMemPitch = 0;
+	indexData.SysMemSlicePitch = 0;
+
+	// Create the index buffer.
+	result = device->CreateBuffer(&indexBufferDesc, &indexData, &m_indexBuffer);
+	if (FAILED(result))
+	{
+		return false;
+	}
 
 	return true;
 }
@@ -235,7 +237,7 @@ void ModelClass::RenderBuffers(ID3D11DeviceContext* deviceContext)
 bool ModelClass::LoadObj(const char* filepath)
 {
 
-	std::string inputfile = "../Project/data/cube.obj";
+	std::string inputfile = filepath;
 	tinyobj::ObjReaderConfig reader_config;
 	reader_config.mtl_search_path = "../Project/data/"; // Path to material files
 
@@ -262,12 +264,11 @@ bool ModelClass::LoadObj(const char* filepath)
 	// Loop over shapes
 	for (size_t s = 0; s < shapes.size(); s++) {
 
-		m_vertexCount =8;
 		// Loop over faces(polygon)
 		size_t index_offset = 0;
 		for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++) {
 			size_t fv = size_t(shapes[s].mesh.num_face_vertices[f]);
-
+			m_indexCount += shapes[s].mesh.indices.size();
 			// Loop over vertices in the face.
 			for (size_t v = 0; v < fv; v++) {
 				NormalVertex tempVertex;
@@ -300,7 +301,7 @@ bool ModelClass::LoadObj(const char* filepath)
 					tempVertex.tu = tx;
 					tempVertex.tv = ty;
 				}
-
+				m_vertexCount += 1;
 				currmodel.push_back(tempVertex);
 			}
 			index_offset += fv;
@@ -308,33 +309,10 @@ bool ModelClass::LoadObj(const char* filepath)
 			/*shapes[s].mesh.material_ids[f];*/
 		}
 	}
-	m_indexCount = m_vertexCount;
+	m_model = currmodel;
 
 	return true;
 
-}
-
-
-bool ModelClass::LoadTexture(ID3D11Device* device,const WCHAR* filename)
-{
-	bool result;
-
-
-	// Create the texture object.
-	m_Texture = new TextureClass;
-	if(!m_Texture)
-	{
-		return false;
-	}
-
-	// Initialize the texture object.
-	result = m_Texture->Initialize(device, filename);
-	if(!result)
-	{
-		return false;
-	}
-
-	return true;
 }
 
 
@@ -352,72 +330,11 @@ void ModelClass::ReleaseTexture()
 }
 
 
-bool ModelClass::LoadModel(const char* filename)
-{
-	ifstream fin;
-	char input;
-	int i;
-
-
-	// Open the model file.
-	fin.open(filename);
-	
-	// If it could not open the file then exit.
-	if(fin.fail())
-	{
-		return false;
-	}
-
-	// Read up to the value of vertex count.
-	fin.get(input);
-	while(input != ':')
-	{
-		fin.get(input);
-	}
-
-	// Read in the vertex count.
-	fin >> m_vertexCount;
-
-	// Set the number of indices to be the same as the vertex count.
-	m_indexCount = m_vertexCount;
-
-	// Create the model using the vertex count that was read in.
-	m_model = new NormalVertex[m_vertexCount];
-	if(!m_model)
-	{
-		return false;
-	}
-
-	// Read up to the beginning of the data.
-	fin.get(input);
-	while(input != ':')
-	{
-		fin.get(input);
-	}
-	fin.get(input);
-	fin.get(input);
-
-	// Read in the vertex data.
-	for(i=0; i<m_vertexCount; i++)
-	{
-		fin >> m_model[i].x >> m_model[i].y >> m_model[i].z;
-		fin >> m_model[i].tu >> m_model[i].tv;
-		fin >> m_model[i].nx >> m_model[i].ny >> m_model[i].nz;
-	}
-
-	// Close the model file.
-	fin.close();
-
-	return true;
-}
-
-
 void ModelClass::ReleaseModel()
 {
-	if(m_model)
+	if(m_model.size()>0)
 	{
-		delete [] m_model;
-		m_model = 0;
+		m_model.clear();
 	}
 
 	return;

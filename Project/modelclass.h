@@ -48,13 +48,13 @@ public:
 
 private:
 	bool InitializeBuffers(ID3D11Device*);
+	bool VertexBufferDesc(ID3D11Device*, int, DXVertexType*);
+	bool IndexBufferDesc(ID3D11Device*, int, unsigned long*);
 	void ShutdownBuffers();
 	void RenderBuffers(ID3D11DeviceContext*);
 
-	bool LoadTexture(ID3D11Device*,const WCHAR*);
 	void ReleaseTexture();
 
-	bool LoadModel(const char*);
 	bool LoadObj(const char*);
 	void ReleaseModel();
 
@@ -62,7 +62,7 @@ private:
 	ID3D11Buffer *m_vertexBuffer, *m_indexBuffer;
 	int m_vertexCount, m_indexCount;
 	TextureClass* m_Texture;
-	NormalVertex* m_model;
+	std::vector<NormalVertex> m_model;
 };
 
 #endif
