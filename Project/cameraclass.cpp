@@ -43,6 +43,15 @@ void CameraClass::SetRotation(float x, float y, float z)
 	return;
 }
 
+void CameraClass::Initialize(float screenW, float screenH, float sNear, float sDepth)
+{
+	screenWidth = screenW;
+	screenHeight = screenH;
+	screenNear = sNear;
+	screenDepth = sDepth;
+
+}
+
 
 XMVECTOR CameraClass::GetPosition()
 {
@@ -61,6 +70,7 @@ void CameraClass::Render()
 	XMVECTOR up, position, lookAt;
 	float yaw, pitch, roll;
 	XMMATRIX rotationMatrix;
+	float fieldOfView, screenAspect;
 
 
 	// Setup the vector that points upwards.
@@ -90,6 +100,15 @@ void CameraClass::Render()
 	// Finally create the view matrix from the three updated vectors.
 	this->m_viewMatrix = XMMatrixLookAtLH(position, lookAt,up);
 
+	
+	// Setup the projection matrix.
+	fieldOfView = (float)XM_PI / 4.0f;
+	screenAspect = (float)screenWidth / (float)screenHeight;
+
+	// Create the projection matrix for 3D rendering. 
+
+	m_projectionMatrix = XMMatrixPerspectiveFovLH(fieldOfView, screenAspect, screenNear, screenDepth);
+
 	return;
 }
 
@@ -98,4 +117,9 @@ void CameraClass::GetViewMatrix(XMMATRIX& viewMatrix)
 {
 	viewMatrix = m_viewMatrix;
 	return;
+}
+
+void CameraClass::GetProjectionMatrix(XMMATRIX& projectionMatrix)
+{
+	projectionMatrix = m_projectionMatrix;
 }
