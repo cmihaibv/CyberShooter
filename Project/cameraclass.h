@@ -30,6 +30,8 @@ public:
 	XMVECTOR GetPosition();
 	XMVECTOR GetRotation();
 
+	void UpdateCamera();
+
 	void Render();
 	void GetViewMatrix(XMMATRIX&);
 	void GetProjectionMatrix(XMMATRIX&);
@@ -44,6 +46,7 @@ private:
 
 	XMMATRIX m_projectionMatrix;
 	XMMATRIX m_viewMatrix;
+
 };
 
 #endif

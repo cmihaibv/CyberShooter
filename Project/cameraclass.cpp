@@ -64,6 +64,12 @@ XMVECTOR CameraClass::GetRotation()
 	return XMVectorSet(m_rotationX, m_rotationY, m_rotationZ, 0.0f);
 }
 
+void CameraClass::UpdateCamera()
+{
+
+
+}
+
 
 void CameraClass::Render()
 {

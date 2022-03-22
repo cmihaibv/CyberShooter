@@ -52,6 +52,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 	// Set the initial position of the camera.
 	m_Camera->SetPosition(0.0f, 0.0f, -15.0f);
+
 	
 	// Create the model object.
 	m_Model = new ModelClass;
@@ -77,6 +78,12 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	if(!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+		return false;
+	}
+
+	m_ModelMGR = new ModelManager;
+	if (!m_ModelMGR)
+	{
 		return false;
 	}
 
