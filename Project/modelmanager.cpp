@@ -2,9 +2,9 @@
 
 ModelManager::ModelManager()
 {
-	m_model = 0;
-	m_texture = 0;
-	m_mesh = 0;
+	//m_model = 0;
+	//m_texture = 0;
+	//m_mesh = 0;
 	m_device = 0;
 	m_allModels.clear();
 }
@@ -24,18 +24,16 @@ void ModelManager::SetDevice( ID3D11Device* deviceContext)
 
 void ModelManager::Shutdown()
 {
-	if (m_texture)
-	{
-		m_mesh->Shutdown();
-		delete m_mesh;
-		m_mesh = 0;
+	for (auto& it : m_allModels) {
+		Model model;
+
+		model = m_allModels.at(it.first);
+
+		model.m_mesh.Shutdown();
+		model.m_texture.Shutdown();
+
 	}
-	if (m_mesh)
-	{
-		m_mesh->Shutdown();
-		delete m_mesh;
-		m_mesh = 0;
-	}
+	m_allModels.clear();
 
 }
 
@@ -58,22 +56,24 @@ void ModelManager::SetMesh(const char* meshLocation)
 void ModelManager::Set(string name)
 {
 	bool result;
+	Model model;
 
-	m_model = new Model;
-
-	result = m_model->m_texture->Initialize(m_device, m_textLocation);
+	
+	result = model.m_texture.Initialize(m_device, m_textLocation);
 	if (!result)
 	{
 		MessageBox(m_hwnd, L"Could not initialize the texture.", L"Error", MB_OK);
 	}
 
-	result = m_model->m_mesh->Initialize(m_device, m_meshFile, m_texture);
+	result = model.m_mesh.Initialize(m_device, m_meshFile, &model.m_texture);
+
 
 	if (!result)
 	{
 		MessageBox(m_hwnd, L"Could not initialize the model.", L"Error", MB_OK);
 	}
 
-	m_allModels.insert({ name, m_model });
+
+	m_allModels.insert({ name, model });
 
 }

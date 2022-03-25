@@ -17,13 +17,13 @@ class ModelManager {
 private:
 	struct Model
 	{
-		TextureClass* m_texture;
-		ModelClass* m_mesh;
+		TextureClass m_texture;
+		ModelClass m_mesh;
 	};
 
-	struct Object
+	struct GameObject
 	{
-		ModelClass* m_model;
+		Model* m_model;
 		XMMATRIX position;
 	};
 
@@ -44,10 +44,10 @@ public:
 
 
 private:
-	ModelClass* m_mesh;
-	Model* m_model;
-	TextureClass* m_texture;
-	std::unordered_map<std::string, Model*> m_allModels;
+	//ModelClass* m_mesh;
+	//Model* m_model;
+	//TextureClass* m_texture;
+	std::unordered_map<std::string, Model> m_allModels;
 
 	const WCHAR* m_textLocation;
 	const char* m_meshFile;

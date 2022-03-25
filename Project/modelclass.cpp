@@ -8,6 +8,8 @@ ModelClass::ModelClass()
 	m_vertexBuffer = 0;
 	m_indexBuffer = 0;
 	m_Texture = 0;
+	m_vertexCount = 0;
+	m_indexCount = 0;
 }
 
 
@@ -264,11 +266,13 @@ bool ModelClass::LoadObj(const char* filepath)
 	// Loop over shapes
 	for (size_t s = 0; s < shapes.size(); s++) {
 
+		m_indexCount += shapes[s].mesh.indices.size();
+
 		// Loop over faces(polygon)
 		size_t index_offset = 0;
 		for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++) {
 			size_t fv = size_t(shapes[s].mesh.num_face_vertices[f]);
-			m_indexCount += shapes[s].mesh.indices.size();
+			
 			// Loop over vertices in the face.
 			for (size_t v = 0; v < fv; v++) {
 				NormalVertex tempVertex;

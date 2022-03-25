@@ -63,10 +63,10 @@ bool SystemClass::Initialize()
 
 	m_modelMGR->SetDevice(m_Graphics->GetDevice());
 
-	m_modelMGR->GetHandle(m_hwnd);
-	m_modelMGR->SetTexture(L"../Project/data/guntex.dds");
-	m_modelMGR->SetMesh("../Project/data/mp5k.obj");
-	m_modelMGR->Set("table");
+	//m_modelMGR->GetHandle(m_hwnd);
+	//m_modelMGR->SetTexture(L"../Project/data/UMP_lambert1_BaseColor.dds");
+	//m_modelMGR->SetMesh("../Project/data/UMP_Test_1.obj");
+	//m_modelMGR->Set("table");
 	
 
 	
