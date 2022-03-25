@@ -74,16 +74,10 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Initialize the model object.
-	result = m_Model->Initialize(m_D3D->GetDevice(), "../Project/data/mp5k.obj", L"../Project/data/seafloor.dds", m_Texture);
+	result = m_Model->Initialize(m_D3D->GetDevice(), "../Project/data/mp5k.obj", m_Texture);
 	if(!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
-		return false;
-	}
-
-	m_ModelMGR = new ModelManager;
-	if (!m_ModelMGR)
-	{
 		return false;
 	}
 
@@ -183,6 +177,11 @@ bool GraphicsClass::Frame()
 	}
 
 	return true;
+}
+
+ID3D11Device* GraphicsClass::GetDevice()
+{
+	return m_D3D->GetDevice();
 }
 
 

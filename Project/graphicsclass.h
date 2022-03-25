@@ -32,6 +32,8 @@ public:
 	void Shutdown();
 	bool Frame();
 
+	ID3D11Device* GetDevice();
+
 private:
 	bool Render(float);
 
@@ -39,7 +41,6 @@ private:
 	D3DClass* m_D3D;
 	CameraClass* m_Camera;
 	ModelClass* m_Model;
-	ModelManager* m_ModelMGR;
 	LightShaderClass* m_LightShader;
 	LightClass* m_Light;
 	TextureClass* m_Texture;

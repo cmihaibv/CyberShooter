@@ -21,7 +21,7 @@ ModelClass::~ModelClass()
 }
 
 
-bool ModelClass::Initialize(ID3D11Device* device,const char* modelFilename,const WCHAR* textureFilename,TextureClass* texture)
+bool ModelClass::Initialize(ID3D11Device* device,const char* modelFilename,TextureClass* texture)
 {
 	bool result;
 

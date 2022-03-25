@@ -5,8 +5,11 @@
 
 #include <unordered_map>
 #include <string>
-#include "textureclass.h"
 #include "modelclass.h"
+#include "textureclass.h"
+#include "d3dclass.h"
+
+
 
 
 
@@ -14,8 +17,8 @@ class ModelManager {
 private:
 	struct Model
 	{
-		TextureClass m_texture;
-		ModelClass m_mesh;
+		TextureClass* m_texture;
+		ModelClass* m_mesh;
 	};
 
 	struct Object
@@ -31,15 +34,26 @@ public:
 	ModelManager(const ModelManager&);
 	~ModelManager();
 
-	void Initialise();
-	void SetTexture();
-	void SetMesh();
+	void Set(string);
+	void SetDevice(ID3D11Device*);
+	void Shutdown();
+
+	void GetHandle(HWND);
+	void SetTexture(const WCHAR*);
+	void SetMesh(const char*);
 
 
 private:
+	ModelClass* m_mesh;
 	Model* m_model;
-	std::unordered_map<std::string, Model*> allModels;
+	TextureClass* m_texture;
+	std::unordered_map<std::string, Model*> m_allModels;
 
+	const WCHAR* m_textLocation;
+	const char* m_meshFile;
+
+	ID3D11Device* m_device;
+	HWND m_hwnd;
 
 };
 

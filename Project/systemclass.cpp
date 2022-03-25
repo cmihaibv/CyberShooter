@@ -54,6 +54,21 @@ bool SystemClass::Initialize()
 	{
 		return false;
 	}
+
+	m_modelMGR = new ModelManager;
+	if (!m_modelMGR)
+	{
+		return false;
+	}
+
+	m_modelMGR->SetDevice(m_Graphics->GetDevice());
+
+	m_modelMGR->GetHandle(m_hwnd);
+	m_modelMGR->SetTexture(L"../Project/data/guntex.dds");
+	m_modelMGR->SetMesh("../Project/data/mp5k.obj");
+	m_modelMGR->Set("table");
+	
+
 	
 	return true;
 }
@@ -67,6 +82,13 @@ void SystemClass::Shutdown()
 		m_Graphics->Shutdown();
 		delete m_Graphics;
 		m_Graphics = 0;
+	}
+
+	if (m_modelMGR)
+	{
+		m_modelMGR->Shutdown();
+		delete m_modelMGR;
+		m_modelMGR = 0;
 	}
 
 	// Release the input object.
