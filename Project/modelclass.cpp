@@ -7,7 +7,7 @@ ModelClass::ModelClass()
 {
 	m_vertexBuffer = 0;
 	m_indexBuffer = 0;
-	m_Texture = 0;
+	//m_Texture = 0;
 	m_vertexCount = 0;
 	m_indexCount = 0;
 }
@@ -23,7 +23,7 @@ ModelClass::~ModelClass()
 }
 
 
-bool ModelClass::Initialize(ID3D11Device* device,const char* modelFilename,TextureClass* texture)
+bool ModelClass::Initialize(ID3D11Device* device,const char* modelFilename/*,TextureClass* texture*/)
 {
 	bool result;
 
@@ -40,7 +40,7 @@ bool ModelClass::Initialize(ID3D11Device* device,const char* modelFilename,Textu
 		return false;
 	}
 	
-	this->m_Texture = texture;
+	//this->m_Texture = texture;
 
 	return true;
 }
@@ -75,17 +75,17 @@ int ModelClass::GetIndexCount()
 	return m_indexCount;
 }
 
-void ModelClass::SetTexture(TextureClass* texture)
-{
-	m_Texture = texture;
-
-	return;
-}
-
-ID3D11ShaderResourceView* ModelClass::GetTexture()
-{
-	return m_Texture->GetTexture();
-}
+//void ModelClass::SetTexture(TextureClass* texture)
+//{
+//	m_Texture = texture;
+//
+//	return;
+//}
+//
+//ID3D11ShaderResourceView* ModelClass::GetTexture()
+//{
+//	return m_Texture->GetTexture();
+//}
 
 
 
@@ -320,18 +320,18 @@ bool ModelClass::LoadObj(const char* filepath)
 }
 
 
-void ModelClass::ReleaseTexture()
-{
-	// Release the texture object.
-	if(m_Texture)
-	{
-		m_Texture->Shutdown();
-		delete m_Texture;
-		m_Texture = 0;
-	}
-
-	return;
-}
+//void ModelClass::ReleaseTexture()
+//{
+//	// Release the texture object.
+//	if(m_Texture)
+//	{
+//		m_Texture->Shutdown();
+//		delete m_Texture;
+//		m_Texture = 0;
+//	}
+//
+//	return;
+//}
 
 
 void ModelClass::ReleaseModel()

@@ -51,7 +51,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Camera->Initialize(screenWidth, screenHeight, SCREEN_NEAR, SCREEN_DEPTH);
 
 	// Set the initial position of the camera.
-	m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
+	m_Camera->SetPosition(0.0f, 0.0f, -7.0f);
 
 	
 	// Create the model object.
@@ -67,14 +67,14 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
-	result = m_Texture->Initialize(m_D3D->GetDevice(), L"../Project/data/guntex.dds");
+	result = m_Texture->Initialize(m_D3D->GetDevice(), L"../Project/data/Turret_lambert1_BaseColor.dds");
 	if (!result)
 	{
 		return false;
 	}
 
 	// Initialize the model object.
-	result = m_Model->Initialize(m_D3D->GetDevice(), "../Project/data/mp5k.obj", m_Texture);
+	result = m_Model->Initialize(m_D3D->GetDevice(), "../Project/data/Turret.obj"/*, m_Texture*/);
 	if(!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
