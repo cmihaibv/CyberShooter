@@ -223,7 +223,7 @@ void ModelClass::RenderBuffers(ID3D11DeviceContext* deviceContext)
 	// Set vertex buffer stride and offset.
 	stride = sizeof(DXVertexType);
 	offset = 0;
-    
+	
 	// Set the vertex buffer to active in the input assembler so it can be rendered.
 	deviceContext->IASetVertexBuffers(0, 1, &m_vertexBuffer, &stride, &offset);
 
@@ -343,3 +343,16 @@ void ModelClass::ReleaseModel()
 
 	return;
 }
+
+
+
+
+
+
+//// Seperate file:
+//class Framework
+//{
+//	Renderer m_renderer;
+//	//... Model manager
+//	// Resource managers
+//}
