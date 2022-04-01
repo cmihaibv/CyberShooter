@@ -48,8 +48,8 @@ bool ModelClass::Initialize(ID3D11Device* device,const char* modelFilename/*,Tex
 
 void ModelClass::Shutdown()
 {
-	// Release the model texture.
-	ReleaseTexture();
+	//// Release the model texture.
+	//ReleaseTexture();
 
 	// Shutdown the vertex and index buffers.
 	ShutdownBuffers();

@@ -67,14 +67,14 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
-	result = m_Texture->Initialize(m_D3D->GetDevice(), L"../Project/data/Turret_lambert1_BaseColor.dds");
+	result = m_Texture->Initialize(m_D3D->GetDevice(), L"../Project/data/Pistol-All_initialShadingGroup_BaseColor.dds");
 	if (!result)
 	{
 		return false;
 	}
 
 	// Initialize the model object.
-	result = m_Model->Initialize(m_D3D->GetDevice(), "../Project/data/Turret.obj"/*, m_Texture*/);
+	result = m_Model->Initialize(m_D3D->GetDevice(), "../Project/data/PistolAll.obj"/*, m_Texture*/);
 	if(!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
@@ -210,7 +210,7 @@ bool GraphicsClass::Render(float rotation)
 
 	// Render the model using the light shader.
 	result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, 
-								   m_Model->GetTexture(), m_Light->GetDirection(), m_Light->GetDiffuseColor());
+								   m_Texture->GetTexture(), m_Light->GetDirection(), m_Light->GetDiffuseColor());
 	if(!result)
 	{
 		return false;

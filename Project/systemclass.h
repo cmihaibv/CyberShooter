@@ -54,7 +54,7 @@ private:
 	InputClass* m_Input;
 	GraphicsClass* m_Graphics;
 
-	ModelManager* m_modelMGR;
+	//ModelManager* m_modelMGR;
 };
 
 
