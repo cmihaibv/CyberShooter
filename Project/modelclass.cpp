@@ -236,6 +236,11 @@ void ModelClass::RenderBuffers(ID3D11DeviceContext* deviceContext)
 	return;
 }
 
+XMMATRIX& ModelClass::GetModelMatrix()
+{
+	return m_modelView;
+}
+
 bool ModelClass::LoadObj(const char* filepath)
 {
 

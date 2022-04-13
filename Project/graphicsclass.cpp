@@ -51,7 +51,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Camera->Initialize(screenWidth, screenHeight, SCREEN_NEAR, SCREEN_DEPTH);
 
 	// Set the initial position of the camera.
-	m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
+	m_Camera->SetPosition(0.0f, 0.0f, -15.0f);
 
 	
 	// Create the model object.
@@ -198,9 +198,13 @@ bool GraphicsClass::Render(float rotation)
 	m_Camera->Render();
 
 	// Get the world, view, and projection matrices from the camera and d3d objects.
+	worldMatrix = m_Model->GetModelMatrix();
 	m_Camera->GetViewMatrix(viewMatrix);
-	m_D3D->GetWorldMatrix(worldMatrix);
 	m_Camera->GetProjectionMatrix(projectionMatrix);
+
+	//worldMatrix = projectionMatrix * viewMatrix;
+	//worldMatrix = projectionMatrix * m_Model->GetModelMatrix();
+
 
 	// Rotate the world matrix by the rotation value so that the triangle will spin.
 	worldMatrix= worldMatrix * XMMatrixRotationY(rotation);
