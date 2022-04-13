@@ -40,7 +40,7 @@ private:
 	float m_positionX, m_positionY, m_positionZ;
 	float m_rotationX, m_rotationY, m_rotationZ;
 
-	
+
 	float screenWidth, screenHeight;
 	float screenNear, screenDepth;
 
@@ -48,8 +48,8 @@ private:
 	XMMATRIX m_viewMatrix = XMMatrixIdentity();
 
 
-	XMVECTOR m_vEyePosition = XMVectorSet(0, 0, 0, 0);
-	float yaw, pitch, roll;
+	//XMVECTOR m_vEyePosition = XMVectorSet(0, 0, 0, 0);
+	//float yaw, pitch, roll;
 
 };
 

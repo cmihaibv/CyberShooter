@@ -28,14 +28,14 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 	// Create the Direct3D object.
 	m_D3D = new D3DClass;
-	if(!m_D3D)
+	if (!m_D3D)
 	{
 		return false;
 	}
 
 	// Initialize the Direct3D object.
 	result = m_D3D->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FALSE, SCREEN_DEPTH, SCREEN_NEAR);
-	if(!result)
+	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize Direct3D.", L"Error", MB_OK);
 		return false;
@@ -43,7 +43,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 	// Create the camera object.
 	m_Camera = new CameraClass;
-	if(!m_Camera)
+	if (!m_Camera)
 	{
 		return false;
 	}
@@ -53,10 +53,10 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	// Set the initial position of the camera.
 	m_Camera->SetPosition(0.0f, 0.0f, -15.0f);
 
-	
+
 	// Create the model object.
 	m_Model = new ModelClass;
-	if(!m_Model)
+	if (!m_Model)
 	{
 		return false;
 	}
@@ -75,7 +75,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 	// Initialize the model object.
 	result = m_Model->Initialize(m_D3D->GetDevice(), "../Project/data/mp5k.obj", m_Texture);
-	if(!result)
+	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
 		return false;
@@ -83,7 +83,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 	// Create the light shader object.
 	m_LightShader = new LightShaderClass;
-	if(!m_LightShader)
+	if (!m_LightShader)
 	{
 		return false;
 	}
@@ -91,7 +91,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 	// Initialize the light shader object.
 	result = m_LightShader->Initialize(m_D3D->GetDevice(), hwnd);
-	if(!result)
+	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the light shader object.", L"Error", MB_OK);
 		return false;
@@ -99,7 +99,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 	// Create the light object.
 	m_Light = new LightClass;
-	if(!m_Light)
+	if (!m_Light)
 	{
 		return false;
 	}
@@ -115,14 +115,14 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 void GraphicsClass::Shutdown()
 {
 	// Release the light object.
-	if(m_Light)
+	if (m_Light)
 	{
 		delete m_Light;
 		m_Light = 0;
 	}
 
 	// Release the light shader object.
-	if(m_LightShader)
+	if (m_LightShader)
 	{
 		m_LightShader->Shutdown();
 		delete m_LightShader;
@@ -130,7 +130,7 @@ void GraphicsClass::Shutdown()
 	}
 
 	// Release the model object.
-	if(m_Model)
+	if (m_Model)
 	{
 		m_Model->Shutdown();
 		delete m_Model;
@@ -138,14 +138,14 @@ void GraphicsClass::Shutdown()
 	}
 
 	// Release the camera object.
-	if(m_Camera)
+	if (m_Camera)
 	{
 		delete m_Camera;
 		m_Camera = 0;
 	}
 
 	// Release the D3D object.
-	if(m_D3D)
+	if (m_D3D)
 	{
 		m_D3D->Shutdown();
 		delete m_D3D;
@@ -164,14 +164,14 @@ bool GraphicsClass::Frame()
 
 	// Update the rotation variable each frame.
 	rotation += (float)XM_PI * 0.001f;
-	if(rotation > 360.0f)
+	if (rotation > 360.0f)
 	{
 		rotation -= 360.0f;
 	}
-	
+
 	// Render the graphics scene.
 	result = Render(rotation);
-	if(!result)
+	if (!result)
 	{
 		return false;
 	}
@@ -207,15 +207,15 @@ bool GraphicsClass::Render(float rotation)
 
 
 	// Rotate the world matrix by the rotation value so that the triangle will spin.
-	worldMatrix= worldMatrix * XMMatrixRotationY(rotation);
+	worldMatrix = worldMatrix * XMMatrixRotationY(rotation);
 
 	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 	m_Model->Render(m_D3D->GetDeviceContext());
 
 	// Render the model using the light shader.
-	result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, 
-								   m_Model->GetTexture(), m_Light->GetDirection(), m_Light->GetDiffuseColor());
-	if(!result)
+	result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_Model->GetTexture(), m_Light->GetDirection(), m_Light->GetDiffuseColor());
+	if (!result)
 	{
 		return false;
 	}

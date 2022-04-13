@@ -90,8 +90,8 @@ void CameraClass::Render()
 
 	// Set the yaw (Y axis), pitch (X axis), and roll (Z axis) rotations in radians.
 	pitch = m_rotationX * 0.0174532925f;
-	yaw   = m_rotationY * 0.0174532925f;
-	roll  = m_rotationZ * 0.0174532925f;
+	yaw = m_rotationY * 0.0174532925f;
+	roll = m_rotationZ * 0.0174532925f;
 
 	// Create the rotation matrix from the yaw, pitch, and roll values.
 	rotationMatrix = XMMatrixRotationRollPitchYaw(pitch, yaw, roll);
@@ -104,9 +104,9 @@ void CameraClass::Render()
 	lookAt = position + lookAt;
 
 	// Finally create the view matrix from the three updated vectors.
-	this->m_viewMatrix = XMMatrixLookAtLH(position, lookAt,up);
+	this->m_viewMatrix = XMMatrixLookAtLH(position, lookAt, up);
 
-	
+
 	// Setup the projection matrix.
 	fieldOfView = (float)XM_PI / 4.0f;
 	screenAspect = (float)screenWidth / (float)screenHeight;
