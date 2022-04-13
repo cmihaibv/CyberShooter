@@ -36,14 +36,14 @@ public:
 	ModelClass(const ModelClass&);
 	~ModelClass();
 
-	bool Initialize(ID3D11Device*, const char*,TextureClass*);
+	bool Initialize(ID3D11Device*, const char*/*,TextureClass**/);
 	
 	void Shutdown();
 	void Render(ID3D11DeviceContext*);
 
 	int GetIndexCount();
-	void SetTexture(TextureClass*);
-	ID3D11ShaderResourceView* GetTexture();
+	//void SetTexture(TextureClass*);
+	//ID3D11ShaderResourceView* GetTexture();
 
 	XMMATRIX& GetModelMatrix();
 
@@ -62,7 +62,7 @@ private:
 private:
 	ID3D11Buffer *m_vertexBuffer, *m_indexBuffer;
 	int m_vertexCount, m_indexCount;
-	TextureClass* m_Texture;
+	//TextureClass* m_Texture;
 	std::vector<NormalVertex> m_model;
 
 	XMMATRIX m_modelView = XMMatrixIdentity();

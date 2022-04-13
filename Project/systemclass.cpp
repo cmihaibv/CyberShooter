@@ -66,11 +66,9 @@ bool SystemClass::Initialize()
 	//m_modelMGR->GetHandle(m_hwnd);
 	//m_modelMGR->SetTexture(L"../Project/data/guntex.dds");
 	//m_modelMGR->SetMesh("../Project/data/mp5k.obj");
-	//m_modelMGR->Set("table");
+	//m_modelMGR->Set("gun");
 
-
-	
-
+	//m_modelMGR->GetModel
 	
 	return true;
 }
@@ -86,12 +84,12 @@ void SystemClass::Shutdown()
 		m_Graphics = 0;
 	}
 
-	if (m_modelMGR)
-	{
-		m_modelMGR->Shutdown();
-		delete m_modelMGR;
-		m_modelMGR = 0;
-	}
+	//if (m_modelMGR)
+	//{
+	//	m_modelMGR->Shutdown();
+	//	delete m_modelMGR;
+	//	m_modelMGR = 0;
+	//}
 
 	// Release the input object.
 	if(m_Input)
@@ -230,8 +228,8 @@ void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
 	// Register the window class.
 	RegisterClass(&wc);
 
-	screenWidth = 800;
-	screenHeight = 600;
+	screenWidth = 1600;
+	screenHeight = 900;
 
 	// Create the window with the screen settings and get the handle to it.
 
