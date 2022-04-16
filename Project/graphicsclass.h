@@ -34,6 +34,8 @@ public:
 
 	ID3D11Device* GetDevice();
 
+	void SetCamera(CameraClass* cam);
+
 private:
 	bool Render(float);
 

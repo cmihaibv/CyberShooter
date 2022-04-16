@@ -5,6 +5,8 @@ SystemClass::SystemClass()
 {
 	m_Input = 0;
 	m_Graphics = 0;
+	m_camera = 0;
+
 }
 
 
@@ -28,8 +30,11 @@ bool SystemClass::Initialize()
 	screenWidth = 0;
 	screenHeight = 0;
 
+
 	// Initialize the windows api.
 	InitializeWindows(screenWidth, screenHeight);
+
+	timer.Start();
 
 	// Create the input object.  This object will be used to handle reading the keyboard input from the user.
 	m_Input = new InputClass;
@@ -55,6 +60,23 @@ bool SystemClass::Initialize()
 		return false;
 	}
 
+
+	// Create the camera object.
+	m_camera = new CameraClass;
+	if (!m_camera)
+	{
+		return false;
+	}
+
+	m_camera->InitialiseProjection(screenWidth, screenHeight, SCREEN_NEAR, SCREEN_DEPTH);
+
+	// Set the initial position of the camera.
+	m_camera->SetPosition(0.0f, 0.0f, -3.0f);
+
+	// Send camera in Graphics
+	m_Graphics->SetCamera(m_camera);
+
+
 	//m_modelMGR = new ModelManager;
 	//if (!m_modelMGR)
 	//{
@@ -76,6 +98,13 @@ bool SystemClass::Initialize()
 
 void SystemClass::Shutdown()
 {
+	// Release the camera object.
+	if (m_camera)
+	{
+		delete m_camera;
+		m_camera = 0;
+	}
+
 	// Release the graphics object.
 	if(m_Graphics)
 	{
@@ -148,6 +177,9 @@ void SystemClass::Run()
 
 bool SystemClass::Frame()
 {
+	float dt = timer.GetMilisecondsElapsed();
+	timer.Restart();
+
 	bool result;
 
 
@@ -155,6 +187,53 @@ bool SystemClass::Frame()
 	if(m_Input->IsKeyDown(VK_ESCAPE))
 	{
 		return false;
+	}
+
+	float cameraVel = 0.1f;
+
+	if (m_Input->IsKeyDown(0x28)) // move back
+	{
+		XMVECTOR moveBack = m_camera->GetBackwardVector() * cameraVel;
+
+		m_camera->UpdatePosition(moveBack);
+	}
+	
+	if (m_Input->IsKeyDown(0x26)) // move forward
+	{
+		XMVECTOR moveForward = m_camera->GetForwardVector() * cameraVel;
+
+		m_camera->UpdatePosition(moveForward);
+	}
+	if (m_Input->IsKeyDown(0x25)) // move left
+	{
+		m_camera->UpdateRotation(0, -cameraVel, 0); // Yaw
+	}
+	if (m_Input->IsKeyDown(0x27)) // move right
+	{
+		m_camera->UpdateRotation(0, +cameraVel, 0); //Yaw
+	}
+
+	//MouseEvent ev = m_mouse.ReadEvent();
+	//if (m_mouse.IsRightDown())
+	//{
+	//	this->m_camera->SetRotation(m_camera->GetRotation() + 20.05f, (float)ev.GetPosX() * 0.01f, 0);
+	//	if (ev.GetType() == MouseEvent::EventType::RAW_MOVE)
+	//	{
+	//		
+	//	}
+	//}
+
+
+	while (!m_mouse.EventBufferIsEmpty())
+	{
+		MouseEvent ev = m_mouse.ReadEvent();
+		if (m_mouse.IsRightDown())
+		{
+			if (ev.GetType() == MouseEvent::EventType::RAW_MOVE)
+			{
+				this->m_camera->SetRotation((float)ev.GetPosY() + 0.05f, (float)ev.GetPosX() * 0.01f, 0);
+			}
+		}
 	}
 
 
@@ -171,6 +250,16 @@ bool SystemClass::Frame()
 
 LRESULT CALLBACK SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
 {
+	HDC hdc;                       // handle to device context 
+	RECT rcClient;                 // client area rectangle 
+	POINT ptClientUL;              // client upper left corner 
+	POINT ptClientLR;              // client lower right corner 
+	static POINTS ptsBegin;        // beginning point 
+	static POINTS ptsEnd;          // new endpoint 
+	static POINTS ptsPrevEnd;      // previous endpoint 
+	static BOOL fPrevLine = FALSE; // previous line flag 
+
+
 	switch(umsg)
 	{
 		// Check if a key has been pressed on the keyboard.
@@ -189,6 +278,113 @@ LRESULT CALLBACK SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam
 			return 0;
 		}
 
+		///////////
+		///////////
+		//Mouse Messages
+		case WM_LBUTTONDOWN:
+		{
+			// Capture mouse input. 
+
+			SetCapture(hwnd);
+
+			// Retrieve the screen coordinates of the client area, 
+			// and convert them into client coordinates. 
+
+			GetClientRect(hwnd, &rcClient);
+			ptClientUL.x = rcClient.left;
+			ptClientUL.y = rcClient.top;
+
+			// Add one to the right and bottom sides, because the 
+			// coordinates retrieved by GetClientRect do not 
+			// include the far left and lowermost pixels. 
+
+			ptClientLR.x = rcClient.right + 1;
+			ptClientLR.y = rcClient.bottom + 1;
+			ClientToScreen(hwnd, &ptClientUL);
+			ClientToScreen(hwnd, &ptClientLR);
+
+			// Copy the client coordinates of the client area 
+			// to the rcClient structure. Confine the mouse cursor 
+			// to the client area by passing the rcClient structure 
+			// to the ClipCursor function. 
+
+			SetRect(&rcClient, ptClientUL.x, ptClientUL.y,
+				ptClientLR.x, ptClientLR.y);
+			ClipCursor(&rcClient);
+
+			// Convert the cursor coordinates into a POINTS 
+			// structure, which defines the beginning point of the 
+			// line drawn during a WM_MOUSEMOVE message. 
+
+			ptsBegin = MAKEPOINTS(lparam);
+			return 0;
+		}
+
+		case WM_MOUSEMOVE:
+		{
+
+			// When moving the mouse, the user must hold down 
+			// the left mouse button to draw lines. 
+
+			if (wparam & MK_LBUTTON)
+			{
+
+				// Retrieve a device context (DC) for the client area. 
+
+				hdc = GetDC(hwnd);
+
+				// The following function ensures that pixels of 
+				// the previously drawn line are set to white and 
+				// those of the new line are set to black. 
+
+				SetROP2(hdc, R2_NOTXORPEN);
+
+				// If a line was drawn during an earlier WM_MOUSEMOVE 
+				// message, draw over it. This erases the line by 
+				// setting the color of its pixels to white. 
+
+				if (fPrevLine)
+				{
+					MoveToEx(hdc, ptsBegin.x, ptsBegin.y,
+						(LPPOINT)NULL);
+					LineTo(hdc, ptsPrevEnd.x, ptsPrevEnd.y);
+				}
+
+				// Convert the current cursor coordinates to a 
+				// POINTS structure, and then draw a new line. 
+
+				ptsEnd = MAKEPOINTS(lparam);
+				MoveToEx(hdc, ptsBegin.x, ptsBegin.y, (LPPOINT)NULL);
+				LineTo(hdc, ptsEnd.x, ptsEnd.y);
+
+				// Set the previous line flag, save the ending 
+				// point of the new line, and then release the DC. 
+
+				fPrevLine = TRUE;
+				ptsPrevEnd = ptsEnd;
+				ReleaseDC(hwnd, hdc);
+			}
+			break;
+
+		}
+
+		case WM_LBUTTONUP:
+		{
+			// The user has finished drawing the line. Reset the 
+			// previous line flag, release the mouse cursor, and 
+			// release the mouse capture. 
+
+			fPrevLine = FALSE;
+			ClipCursor(NULL);
+			ReleaseCapture();
+			return 0;
+		}
+		case WM_DESTROY: 
+		{
+			PostQuitMessage(0);
+			break;
+		}
+			
 		// Any other messages send to the default message handler as our application won't make use of them.
 		default:
 		{
@@ -230,6 +426,7 @@ void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
 
 	screenWidth = 1600;
 	screenHeight = 900;
+
 
 	// Create the window with the screen settings and get the handle to it.
 
