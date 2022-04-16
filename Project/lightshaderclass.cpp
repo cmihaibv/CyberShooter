@@ -336,9 +336,9 @@ bool LightShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, X
 
 
 	// Transpose the matrices to prepare them for the shader.
-	worldMatrix = XMMatrixTranspose(worldMatrix);
-	viewMatrix = XMMatrixTranspose(viewMatrix);
-	projectionMatrix = XMMatrixTranspose(viewMatrix);
+	//worldMatrix = XMMatrixTranspose(worldMatrix);
+	//viewMatrix = XMMatrixTranspose(viewMatrix);
+	//projectionMatrix = XMMatrixTranspose(viewMatrix);
 
 	// Lock the constant buffer so it can be written to.
 	result = deviceContext->Map(m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
@@ -352,9 +352,11 @@ bool LightShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, X
 
 	// Copy the matrices into the constant buffer.
 	dataPtr->world = worldMatrix;
+	dataPtr->world = XMMatrixTranspose(dataPtr->world);
 	dataPtr->view = viewMatrix;
+	dataPtr->view = XMMatrixTranspose(dataPtr->view);
 	dataPtr->projection = projectionMatrix;
-
+	dataPtr->projection = XMMatrixTranspose(dataPtr->projection);
 	// Unlock the constant buffer.
 	deviceContext->Unmap(m_matrixBuffer, 0);
 
