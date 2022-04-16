@@ -65,7 +65,10 @@ private:
 	TextureClass* m_Texture;
 	std::vector<NormalVertex> m_model;
 
-	XMMATRIX m_modelView = XMMatrixIdentity();
+	XMFLOAT3 m_position = XMFLOAT3(0, -2.0f, 300.0f);		// world position of the object
+	XMFLOAT3 m_rotation = XMFLOAT3(0, 120, 0);				// world rotation of the object
+
+	XMMATRIX m_modelView = XMMatrixIdentity();				// model matrix, set to identity by default
 };
 
 #endif
