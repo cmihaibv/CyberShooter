@@ -33,6 +33,7 @@ struct PixelInputType
 ////////////////////////////////////////////////////////////////////////////////
 float4 LightPixelShader(PixelInputType input) : SV_TARGET
 {
+    
     float4 textureColor;
     float3 lightDir;
     float lightIntensity;

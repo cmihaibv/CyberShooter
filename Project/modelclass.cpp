@@ -10,6 +10,10 @@ ModelClass::ModelClass()
 	m_Texture = 0;
 	m_vertexCount = 0;
 	m_indexCount = 0;
+
+
+	m_modelView = XMMatrixTranslation(m_position.x, m_position.y, m_position.z)*XMMatrixRotationY(m_rotation.y);
+	
 }
 
 

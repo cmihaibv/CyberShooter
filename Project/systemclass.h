@@ -23,6 +23,9 @@
 #include "inputclass.h"
 #include "graphicsclass.h"
 #include "modelmanager.h"
+#include "cameraclass.h"
+#include "mouse.h"
+#include "Timer.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -53,6 +56,10 @@ private:
 
 	InputClass* m_Input;
 	GraphicsClass* m_Graphics;
+	MouseClass m_mouse;
+	Timer timer;
+
+	CameraClass* m_camera;
 
 	//ModelManager* m_modelMGR;
 };
