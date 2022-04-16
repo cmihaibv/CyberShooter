@@ -41,19 +41,6 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
-	// Create the camera object.
-	m_Camera = new CameraClass;
-	if (!m_Camera)
-	{
-		return false;
-	}
-
-	m_Camera->Initialize(screenWidth, screenHeight, SCREEN_NEAR, SCREEN_DEPTH);
-
-	// Set the initial position of the camera.
-	m_Camera->SetPosition(0.0f, 0.0f, -15.0f);
-
-
 	// Create the model object.
 	m_Model = new ModelClass;
 	if (!m_Model)
@@ -87,7 +74,6 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	{
 		return false;
 	}
-
 
 	// Initialize the light shader object.
 	result = m_LightShader->Initialize(m_D3D->GetDevice(), hwnd);
@@ -137,13 +123,6 @@ void GraphicsClass::Shutdown()
 		m_Model = 0;
 	}
 
-	// Release the camera object.
-	if (m_Camera)
-	{
-		delete m_Camera;
-		m_Camera = 0;
-	}
-
 	// Release the D3D object.
 	if (m_D3D)
 	{
@@ -169,6 +148,7 @@ bool GraphicsClass::Frame()
 		rotation -= 360.0f;
 	}
 
+
 	// Render the graphics scene.
 	result = Render(rotation);
 	if (!result)
@@ -184,6 +164,11 @@ ID3D11Device* GraphicsClass::GetDevice()
 	return m_D3D->GetDevice();
 }
 
+void GraphicsClass::SetCamera(CameraClass* cam)
+{
+	m_Camera = cam;
+}
+
 
 bool GraphicsClass::Render(float rotation)
 {
@@ -194,25 +179,35 @@ bool GraphicsClass::Render(float rotation)
 	// Clear the buffers to begin the scene.
 	m_D3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 
-	// Generate the view matrix based on the camera's position.
-	m_Camera->Render();
-
-	// Get the world, view, and projection matrices from the camera and d3d objects.
-	worldMatrix = m_Model->GetModelMatrix();
-	m_Camera->GetViewMatrix(viewMatrix);
-	m_Camera->GetProjectionMatrix(projectionMatrix);
-
-	//worldMatrix = projectionMatrix * viewMatrix;
-	//worldMatrix = projectionMatrix * m_Model->GetModelMatrix();
-
-
-	// Rotate the world matrix by the rotation value so that the triangle will spin.
-	worldMatrix = worldMatrix * XMMatrixRotationY(rotation);
+	// Update the view matrix based on the camera's position.
+	m_Camera->UpdateCamera();
 
 	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 	m_Model->Render(m_D3D->GetDeviceContext());
 
+	// Get the world, view, and projection matrices from the camera and objects.
+	worldMatrix = m_Model->GetModelMatrix();
+	viewMatrix = m_Camera->GetViewMatrix();
+	projectionMatrix = m_Camera->GetProjectionMatrix();
+
+
+
+	// Rotate the world matrix by the rotation value so that the triangle will spin.
+	//worldMatrix += worldMatrix * XMMatrixRotationY(rotation);
+
+
 	// Render the model using the light shader.
+	result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_Model->GetTexture(), m_Light->GetDirection(), m_Light->GetDiffuseColor());
+	if (!result)
+	{
+		return false;
+	}
+
+	//worldMatrix = XMMatrixRotationY(115) * XMMatrixTranslation(13.f, 3.f, 130.f) * m_Camera->GetViewMatrix() * m_Camera->GetProjectionMatrix();
+
+	worldMatrix = XMMatrixRotationY(115)* XMMatrixTranslation(13.f, 3.f, 130.f) ;
+
 	result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
 		m_Model->GetTexture(), m_Light->GetDirection(), m_Light->GetDiffuseColor());
 	if (!result)
