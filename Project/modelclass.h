@@ -45,7 +45,6 @@ public:
 	void SetTexture(TextureClass*);
 	ID3D11ShaderResourceView* GetTexture();
 
-	XMMATRIX& GetModelMatrix();
 
 private:
 	bool InitializeBuffers(ID3D11Device*);
@@ -54,7 +53,6 @@ private:
 	void ShutdownBuffers();
 	void RenderBuffers(ID3D11DeviceContext*);
 
-	void ReleaseTexture();
 
 	bool LoadObj(const char*);
 	void ReleaseModel();
@@ -64,11 +62,6 @@ private:
 	int m_vertexCount, m_indexCount;
 	TextureClass* m_Texture;
 	std::vector<NormalVertex> m_model;
-
-	XMFLOAT3 m_position = XMFLOAT3(0, -2.0f, 300.0f);		// world position of the object
-	XMFLOAT3 m_rotation = XMFLOAT3(0, 120, 0);				// world rotation of the object
-
-	XMMATRIX m_modelView = XMMatrixIdentity();				// model matrix, set to identity by default
 };
 
 #endif

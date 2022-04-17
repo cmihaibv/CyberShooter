@@ -9,11 +9,7 @@ ModelClass::ModelClass()
 	m_indexBuffer = 0;
 	m_Texture = 0;
 	m_vertexCount = 0;
-	m_indexCount = 0;
-
-
-	m_modelView = XMMatrixTranslation(m_position.x, m_position.y, m_position.z)*XMMatrixRotationY(m_rotation.y);
-	
+	m_indexCount = 0;	
 }
 
 
@@ -52,8 +48,6 @@ bool ModelClass::Initialize(ID3D11Device* device, const char* modelFilename, Tex
 
 void ModelClass::Shutdown()
 {
-	// Release the model texture.
-	ReleaseTexture();
 
 	// Shutdown the vertex and index buffers.
 	ShutdownBuffers();
@@ -240,11 +234,6 @@ void ModelClass::RenderBuffers(ID3D11DeviceContext* deviceContext)
 	return;
 }
 
-XMMATRIX& ModelClass::GetModelMatrix()
-{
-	return m_modelView;
-}
-
 bool ModelClass::LoadObj(const char* filepath)
 {
 
@@ -326,20 +315,6 @@ bool ModelClass::LoadObj(const char* filepath)
 
 	return true;
 
-}
-
-
-void ModelClass::ReleaseTexture()
-{
-	// Release the texture object.
-	if (m_Texture)
-	{
-		m_Texture->Shutdown();
-		delete m_Texture;
-		m_Texture = 0;
-	}
-
-	return;
 }
 
 
