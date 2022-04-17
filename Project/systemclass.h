@@ -22,7 +22,7 @@
 ///////////////////////
 #include "inputclass.h"
 #include "graphicsclass.h"
-#include "modelmanager.h"
+#include "gameobjectmanager.h"
 #include "cameraclass.h"
 #include "mouse.h"
 #include "Timer.h"
@@ -31,6 +31,12 @@
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: SystemClass
 ////////////////////////////////////////////////////////////////////////////////
+struct Gamedata
+{
+	enum GameState { MAINMENU, PLAY, LOST, SCORES, WON };
+};
+
+
 class SystemClass
 {
 public:
@@ -38,9 +44,15 @@ public:
 	SystemClass(const SystemClass&);
 	~SystemClass();
 
+
+
 	bool Initialize();
+	void InitialiseObjects();
+
 	void Shutdown();
 	void Run();
+
+
 
 	LRESULT CALLBACK MessageHandler(HWND, UINT, WPARAM, LPARAM);
 
@@ -49,7 +61,6 @@ private:
 	void InitializeWindows(int&, int&);
 	void ShutdownWindows();
 
-private:
 	LPCWSTR m_applicationName;
 	HINSTANCE m_hinstance;
 	HWND m_hwnd;
@@ -60,8 +71,9 @@ private:
 	Timer timer;
 
 	CameraClass* m_camera;
+	GameObjectManager* m_gameObjectManager;
 
-	//ModelManager* m_modelMGR;
+	Gamedata::GameState mode = Gamedata::GameState::MAINMENU;
 };
 
 

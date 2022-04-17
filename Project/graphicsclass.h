@@ -10,6 +10,7 @@
 #include "modelclass.h"
 #include "lightshaderclass.h"
 #include "lightclass.h"
+#include "GameObjectManager.h"
 
 
 /////////////
@@ -35,9 +36,10 @@ public:
 	ID3D11Device* GetDevice();
 
 	void SetCamera(CameraClass* cam);
+	void InitialiseGameObjects(GameObjectManager*);
 
 private:
-	bool Render(float);
+	bool Render();
 
 private:
 	D3DClass* m_D3D;
@@ -46,6 +48,9 @@ private:
 	LightShaderClass* m_LightShader;
 	LightClass* m_Light;
 	TextureClass* m_Texture;
+
+	//beta
+	GameObjectManager* m_gameObjectManager;
 };
 
 #endif

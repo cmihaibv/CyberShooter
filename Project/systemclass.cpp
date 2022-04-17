@@ -60,6 +60,12 @@ bool SystemClass::Initialize()
 		return false;
 	}
 
+	m_gameObjectManager = new GameObjectManager;
+	if (!m_gameObjectManager)
+	{
+		return false;
+	}
+
 
 	// Create the camera object.
 	m_camera = new CameraClass;
@@ -67,6 +73,7 @@ bool SystemClass::Initialize()
 	{
 		return false;
 	}
+
 
 	m_camera->InitialiseProjection(screenWidth, screenHeight, SCREEN_NEAR, SCREEN_DEPTH);
 
@@ -76,23 +83,61 @@ bool SystemClass::Initialize()
 	// Send camera in Graphics
 	m_Graphics->SetCamera(m_camera);
 
+	InitialiseObjects();
 
-	//m_modelMGR = new ModelManager;
-	//if (!m_modelMGR)
-	//{
-	//	return false;
-	//}
 
-	//m_modelMGR->SetDevice(m_Graphics->GetDevice());
 
-	//m_modelMGR->GetHandle(m_hwnd);
-	//m_modelMGR->SetTexture(L"../Project/data/guntex.dds");
-	//m_modelMGR->SetMesh("../Project/data/mp5k.obj");
-	//m_modelMGR->Set("gun");
-
-	//m_modelMGR->GetModel
 	
 	return true;
+}
+
+
+void SystemClass::InitialiseObjects()
+{
+	
+	//for (int i = 0; i < 3;i++)
+	//{
+	//	GameObject* obj = new GameObject;
+
+	//	obj->SetD3DDevice(m_Graphics->GetDevice());
+	//	obj->SetTexture(L"../Project/data/guntex.dds");
+	//	obj->SetModel("../Project/data/mp5k.obj");
+	//	obj->SetPosition(0, -2.0f, 100.f*i);
+	//	obj->SetRotation(0, 120.f, 0);
+	//	m_Graphics->InitialiseGameObject(obj, std::to_string(i));
+
+	//}
+	//GameObject* obj = new GameObject;
+	//obj->SetD3DDevice(m_Graphics->GetDevice());
+	//obj->SetTexture(L"../Project/data/guntex.dds");
+	//obj->SetModel("../Project/data/mp5k.obj");
+	//obj->SetPosition(0, -2.0f, 200.f);
+	//obj->SetRotation(0, 120.f, 0);
+	//m_Graphics->InitialiseGameObject(obj, "gun2");
+
+
+	GameObject* map = new GameObject;
+	map->SetD3DDevice(m_Graphics->GetDevice());
+	map->SetTexture(L"../Project/data/maptex.dds");
+	map->SetModel("../Project/data/map.obj");
+	map->SetPosition(0, -2.0f, 0.f);
+	map->SetRotation(0, 120.f, 0);
+	m_gameObjectManager->AddGameObject(map, "map");
+
+	
+	GameObject* gun = new GameObject;
+	gun->SetD3DDevice(m_Graphics->GetDevice());
+	gun->SetTexture(L"../Project/data/UMP_lambert1_BaseColor.dds");
+	gun->SetModel("../Project/data/UMP.obj");
+	gun->SetPosition(XMVectorGetX(m_camera->GetPosition()), -1.0, XMVectorGetZ(m_camera->GetPosition()));
+	gun->SetRotation(XMVectorGetX(m_camera->GetRotation()), XMVectorGetY(m_camera->GetRotation()), XMVectorGetZ(m_camera->GetRotation()));
+	gun->SetScale(0.1f, 0.1f, 0.1f);
+	m_gameObjectManager->AddGameObject(gun, "gun");
+
+
+
+	m_Graphics->InitialiseGameObjects(m_gameObjectManager);
+
 }
 
 
@@ -112,13 +157,6 @@ void SystemClass::Shutdown()
 		delete m_Graphics;
 		m_Graphics = 0;
 	}
-
-	//if (m_modelMGR)
-	//{
-	//	m_modelMGR->Shutdown();
-	//	delete m_modelMGR;
-	//	m_modelMGR = 0;
-	//}
 
 	// Release the input object.
 	if(m_Input)
@@ -173,6 +211,56 @@ void SystemClass::Run()
 
 	return;
 }
+bool SystemDoSomTest(InputClass* m_Input,CameraClass* m_camera,GameObjectManager* m_gameObjectManager,GraphicsClass* m_Graphics)
+{
+	bool result;
+
+	float cameraVel = 0.1f;
+	GameObject* gameobj = m_gameObjectManager->GetGameObject("gun");
+	if (m_Input->IsKeyDown(0x28)) // move back
+	{
+		XMVECTOR moveBack = m_camera->GetBackwardVector() * cameraVel;
+
+		m_camera->UpdatePosition(moveBack);
+		//moveBack = gameobj->GetBackwardVector() * cameraVel;
+		gameobj->UpdatePosition(moveBack);
+	}
+
+	if (m_Input->IsKeyDown(0x26)) // move forward
+	{
+		XMVECTOR moveForward = m_camera->GetForwardVector() * cameraVel;
+
+		m_camera->UpdatePosition(moveForward);
+		gameobj->UpdatePosition(moveForward);
+	}
+	if (m_Input->IsKeyDown(0x25)) // move left
+	{
+		m_camera->UpdateRotation(0, -cameraVel, 0); // Yaw
+	}
+	if (m_Input->IsKeyDown(0x27)) // move right
+	{
+		m_camera->UpdateRotation(0, +cameraVel, 0); //Yaw
+	}
+
+
+	gameobj->SetRotation(XMVectorGetX(m_camera->GetRotation()), XMVectorGetY(m_camera->GetRotation()), XMVectorGetZ(m_camera->GetRotation()));
+	//XMVECTOR x = m_camera->GetBackwardVector();
+	//gameobj->UpdatePosition(x);
+
+	//while (!m_mouse.EventBufferIsEmpty())
+	//{
+	//	MouseEvent ev = m_mouse.ReadEvent();
+	//	if (m_mouse.IsRightDown())
+	//	{
+	//		if (ev.GetType() == MouseEvent::EventType::RAW_MOVE)
+	//		{
+	//			this->m_camera->SetRotation((float)ev.GetPosY() + 0.05f, (float)ev.GetPosX() * 0.01f, 0);
+	//		}
+	//	}
+	//}
+	result = m_Graphics->Frame();
+	return result;
+}
 
 
 bool SystemClass::Frame()
@@ -189,62 +277,32 @@ bool SystemClass::Frame()
 		return false;
 	}
 
-	float cameraVel = 0.1f;
 
-	if (m_Input->IsKeyDown(0x28)) // move back
+
+
+
+	switch (mode)
 	{
-		XMVECTOR moveBack = m_camera->GetBackwardVector() * cameraVel;
-
-		m_camera->UpdatePosition(moveBack);
-	}
-	
-	if (m_Input->IsKeyDown(0x26)) // move forward
-	{
-		XMVECTOR moveForward = m_camera->GetForwardVector() * cameraVel;
-
-		m_camera->UpdatePosition(moveForward);
-	}
-	if (m_Input->IsKeyDown(0x25)) // move left
-	{
-		m_camera->UpdateRotation(0, -cameraVel, 0); // Yaw
-	}
-	if (m_Input->IsKeyDown(0x27)) // move right
-	{
-		m_camera->UpdateRotation(0, +cameraVel, 0); //Yaw
-	}
-
-	//MouseEvent ev = m_mouse.ReadEvent();
-	//if (m_mouse.IsRightDown())
-	//{
-	//	this->m_camera->SetRotation(m_camera->GetRotation() + 20.05f, (float)ev.GetPosX() * 0.01f, 0);
-	//	if (ev.GetType() == MouseEvent::EventType::RAW_MOVE)
-	//	{
-	//		
-	//	}
-	//}
-
-
-	while (!m_mouse.EventBufferIsEmpty())
-	{
-		MouseEvent ev = m_mouse.ReadEvent();
-		if (m_mouse.IsRightDown())
+	case Gamedata::GameState::MAINMENU:
+		result = SystemDoSomTest(m_Input,m_camera,m_gameObjectManager,m_Graphics);
+		// Do the frame processing for the graphics object.
+		if (!result)
 		{
-			if (ev.GetType() == MouseEvent::EventType::RAW_MOVE)
-			{
-				this->m_camera->SetRotation((float)ev.GetPosY() + 0.05f, (float)ev.GetPosX() * 0.01f, 0);
-			}
+			return false;
 		}
+		return true;
+		break;
+	case Gamedata::GameState::SCORES:
+		break;
+	case Gamedata::GameState::PLAY:
+		break;
+	case Gamedata::GameState::LOST:
+		break;
+	case Gamedata::GameState::WON:
+		break;
 	}
 
 
-	// Do the frame processing for the graphics object.
-	result = m_Graphics->Frame();
-	if(!result)
-	{
-		return false;
-	}
-
-	return true;
 }
 
 

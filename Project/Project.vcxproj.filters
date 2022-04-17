@@ -45,7 +45,7 @@
     <ClCompile Include="DDSTextureLoader11.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="modelmanager.cpp">
+    <ClCompile Include="gameobjectmanager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="inputclass.cpp">
@@ -72,6 +72,9 @@
     <ClCompile Include="mouseevent.cpp">
       <Filter>Mouse</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cameraclass.h">
@@ -95,7 +98,7 @@
     <ClInclude Include="tiny_obj_loader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="modelmanager.h">
+    <ClInclude Include="gameobjectmanager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="inputclass.h">
@@ -121,6 +124,9 @@
     </ClInclude>
     <ClInclude Include="mouseevent.h">
       <Filter>Mouse</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
