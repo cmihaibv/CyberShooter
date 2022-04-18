@@ -45,15 +45,18 @@ public:
 	const XMVECTOR& GetBackwardVector();
 	const XMVECTOR& GetLeftVector();
 
-
-	//beta
+	XMFLOAT3& GetPosition();
 	XMMATRIX& modelMatrix();
-	//
+
+	//beta : vector of collision
+	//std::vector<CollisionSphere> GetCollisionSpheres();
+
+
 	void ReleaseObject();
 
 	TextureClass* m_texture;
 	ModelClass* m_model;
-private:
+protected:
 
 	ID3D11Device* m_device;					// d3d handle to read & write
 	bool m_isUpdated = false;				// is updated?
@@ -81,6 +84,8 @@ private:
 	const XMVECTOR m_DefaultBackwardVec = XMVectorSet(0.0f, 0.0f, -1.0f, 0.0f);	// 
 	const XMVECTOR m_DefaultLeftVec = XMVectorSet(-1.0f, 0.0f, 0.0f, 0.0f);		//
 	const XMVECTOR m_DefaultRightVec = XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f);		//
+
+	//std::vector<CollisionSphere> m_collisionspheres;
 
 };
 

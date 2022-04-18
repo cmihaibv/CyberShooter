@@ -44,14 +44,13 @@ public:
 	SystemClass(const SystemClass&);
 	~SystemClass();
 
-
-
 	bool Initialize();
 	void InitialiseObjects();
 
 	void Shutdown();
 	void Run();
 
+	bool UpdateDrawGamePlay();
 
 
 	LRESULT CALLBACK MessageHandler(HWND, UINT, WPARAM, LPARAM);
@@ -77,9 +76,7 @@ private:
 };
 
 
-/////////////////////////
-// FUNCTION PROTOTYPES //
-/////////////////////////
+
 static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
 

@@ -133,6 +133,11 @@ const XMVECTOR& GameObject::GetLeftVector()
 	return m_vecLeft;
 }
 
+XMFLOAT3& GameObject::GetPosition()
+{
+	return m_position;
+}
+
 XMMATRIX& GameObject::modelMatrix()
 {
 	return m_modelView;

@@ -211,57 +211,55 @@ void SystemClass::Run()
 
 	return;
 }
-bool SystemDoSomTest(InputClass* m_Input,CameraClass* m_camera,GameObjectManager* m_gameObjectManager,GraphicsClass* m_Graphics)
+
+void MoveCharacter(CameraClass* camera, GameObjectManager* gamemgr,InputClass* input)
 {
-	bool result;
-
 	float cameraVel = 0.1f;
-	GameObject* gameobj = m_gameObjectManager->GetGameObject("gun");
-	if (m_Input->IsKeyDown(0x28)) // move back
-	{
-		XMVECTOR moveBack = m_camera->GetBackwardVector() * cameraVel;
 
-		m_camera->UpdatePosition(moveBack);
-		//moveBack = gameobj->GetBackwardVector() * cameraVel;
+	//Store pointer of the gameobject into a variable
+	GameObject* gameobj = gamemgr->GetGameObject("gun");
+
+	if (input->IsKeyDown(0x28)) // Move camera and weapon back
+	{
+		XMVECTOR moveBack = camera->GetBackwardVector() * cameraVel;
+
+		camera->UpdatePosition(moveBack);
+		moveBack = gameobj->GetBackwardVector() * cameraVel;
 		gameobj->UpdatePosition(moveBack);
 	}
-
-	if (m_Input->IsKeyDown(0x26)) // move forward
+	if (input->IsKeyDown(0x26)) // Move camera and weapon forward
 	{
-		XMVECTOR moveForward = m_camera->GetForwardVector() * cameraVel;
+		XMVECTOR moveForward = camera->GetForwardVector() * cameraVel;
+		camera->UpdatePosition(moveForward);
 
-		m_camera->UpdatePosition(moveForward);
+		moveForward = gameobj->GetForwardVector() * cameraVel;
 		gameobj->UpdatePosition(moveForward);
 	}
-	if (m_Input->IsKeyDown(0x25)) // move left
+	if (input->IsKeyDown(0x25)) // Rotate camera 
 	{
-		m_camera->UpdateRotation(0, -cameraVel, 0); // Yaw
+		camera->UpdateRotation(0, -cameraVel, 0); // Yaw
 	}
-	if (m_Input->IsKeyDown(0x27)) // move right
+	if (input->IsKeyDown(0x27)) // rotate camera
 	{
-		m_camera->UpdateRotation(0, +cameraVel, 0); //Yaw
+		camera->UpdateRotation(0, +cameraVel, 0); //Yaw
 	}
 
+	//Rotate weapon
+	gameobj->SetRotation(XMVectorGetX(camera->GetRotation()), XMVectorGetY(camera->GetRotation()), XMVectorGetZ(camera->GetRotation()));
+}
 
-	gameobj->SetRotation(XMVectorGetX(m_camera->GetRotation()), XMVectorGetY(m_camera->GetRotation()), XMVectorGetZ(m_camera->GetRotation()));
-	//XMVECTOR x = m_camera->GetBackwardVector();
-	//gameobj->UpdatePosition(x);
+bool SystemClass::UpdateDrawGamePlay()
+{
+	bool result;
+	
+	MoveCharacter(m_camera,m_gameObjectManager,m_Input);
 
-	//while (!m_mouse.EventBufferIsEmpty())
-	//{
-	//	MouseEvent ev = m_mouse.ReadEvent();
-	//	if (m_mouse.IsRightDown())
-	//	{
-	//		if (ev.GetType() == MouseEvent::EventType::RAW_MOVE)
-	//		{
-	//			this->m_camera->SetRotation((float)ev.GetPosY() + 0.05f, (float)ev.GetPosX() * 0.01f, 0);
-	//		}
-	//	}
-	//}
+
+
+
 	result = m_Graphics->Frame();
 	return result;
 }
-
 
 bool SystemClass::Frame()
 {
@@ -277,15 +275,11 @@ bool SystemClass::Frame()
 		return false;
 	}
 
-
-
-
-
 	switch (mode)
 	{
 	case Gamedata::GameState::MAINMENU:
-		result = SystemDoSomTest(m_Input,m_camera,m_gameObjectManager,m_Graphics);
 		// Do the frame processing for the graphics object.
+		result = UpdateDrawGamePlay();	
 		if (!result)
 		{
 			return false;

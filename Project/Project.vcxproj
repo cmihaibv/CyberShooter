@@ -12,6 +12,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cameraclass.cpp" />
+    <ClCompile Include="CollisionEngine.cpp" />
+    <ClCompile Include="CollisionSphere.cpp" />
     <ClCompile Include="d3dclass.cpp" />
     <ClCompile Include="DDSTextureLoader11.cpp" />
     <ClCompile Include="GameObject.cpp" />
@@ -30,6 +32,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cameraclass.h" />
+    <ClInclude Include="CollisionEngine.h" />
+    <ClInclude Include="CollisionSphere.h" />
     <ClInclude Include="d3dclass.h" />
     <ClInclude Include="DDSTextureLoader11.h" />
     <ClInclude Include="GameObject.h" />
