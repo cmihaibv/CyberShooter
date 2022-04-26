@@ -9,7 +9,7 @@ Timer::Timer()
 
 double Timer::GetMilisecondsElapsed()
 {
-	if (isrunning)
+	if (m_isrunning)
 	{
 		auto elapsed = std::chrono::duration<double, std::milli>(std::chrono::high_resolution_clock::now() - start);
 		return elapsed.count();
@@ -23,32 +23,32 @@ double Timer::GetMilisecondsElapsed()
 
 void Timer::Restart()
 {
-	isrunning = true;
+	m_isrunning = true;
 	start = std::chrono::high_resolution_clock::now();
 }
 
 bool Timer::Stop()
 {
-	if (!isrunning)
+	if (!m_isrunning)
 		return false;
 	else
 	{
 		stop = std::chrono::high_resolution_clock::now();
-		isrunning = false;
+		m_isrunning = false;
 		return true;
 	}
 }
 
 bool Timer::Start()
 {
-	if (isrunning)
+	if (m_isrunning)
 	{
 		return false;
 	}
 	else
 	{
 		start = std::chrono::high_resolution_clock::now();
-		isrunning = true;
+		m_isrunning = true;
 		return true;
 	}
 }

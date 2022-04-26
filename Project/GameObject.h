@@ -7,6 +7,7 @@
 #include <DirectXMath.h>
 #include <fstream>
 #include "modelclass.h"
+#include "CollisionSphere.h"
 
 
 using namespace std;
@@ -23,6 +24,8 @@ public:
 	~GameObject();
 
 	void SetD3DDevice(ID3D11Device*);
+	void SetName(string name);
+	string GetName();
 
 	/// <summary>
 	/// File path define like:  L" filepath" 
@@ -46,10 +49,13 @@ public:
 	const XMVECTOR& GetLeftVector();
 
 	XMFLOAT3& GetPosition();
+	XMVECTOR& GetPositionVec();
 	XMMATRIX& modelMatrix();
 
 	//beta : vector of collision
-	//std::vector<CollisionSphere> GetCollisionSpheres();
+	void SetCollisionSphere(CollisionSphere*);
+	CollisionSphere* GetCollisionSphere();
+	void UpdateCollision();
 
 
 	void ReleaseObject();
@@ -59,7 +65,6 @@ public:
 protected:
 
 	ID3D11Device* m_device;					// d3d handle to read & write
-	bool m_isUpdated = false;				// is updated?
 
 	XMVECTOR m_posVec = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);		//	position of the object in the world
 	XMVECTOR m_rotVec = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);		//	rotation of the object
@@ -85,7 +90,9 @@ protected:
 	const XMVECTOR m_DefaultLeftVec = XMVectorSet(-1.0f, 0.0f, 0.0f, 0.0f);		//
 	const XMVECTOR m_DefaultRightVec = XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f);		//
 
-	//std::vector<CollisionSphere> m_collisionspheres;
+private:
+	string m_name;
+	CollisionSphere* m_collisionsphere = nullptr;
 
 };
 

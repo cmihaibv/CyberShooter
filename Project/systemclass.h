@@ -26,6 +26,7 @@
 #include "cameraclass.h"
 #include "mouse.h"
 #include "Timer.h"
+#include "CollisionEngine.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -71,6 +72,7 @@ private:
 
 	CameraClass* m_camera;
 	GameObjectManager* m_gameObjectManager;
+	CollisionEngine* m_collisionEngine;
 
 	Gamedata::GameState mode = Gamedata::GameState::MAINMENU;
 };

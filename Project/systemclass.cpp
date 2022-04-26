@@ -74,6 +74,12 @@ bool SystemClass::Initialize()
 		return false;
 	}
 
+	m_collisionEngine = new CollisionEngine;
+	if (!m_collisionEngine)
+	{
+		return false;
+	}
+
 
 	m_camera->InitialiseProjection(screenWidth, screenHeight, SCREEN_NEAR, SCREEN_DEPTH);
 
@@ -117,26 +123,60 @@ void SystemClass::InitialiseObjects()
 
 
 	GameObject* map = new GameObject;
+	map->SetName("map");
 	map->SetD3DDevice(m_Graphics->GetDevice());
 	map->SetTexture(L"../Project/data/maptex.dds");
 	map->SetModel("../Project/data/map.obj");
 	map->SetPosition(0, -2.0f, 0.f);
 	map->SetRotation(0, 120.f, 0);
-	m_gameObjectManager->AddGameObject(map, "map");
+	m_gameObjectManager->AddGameObject(map, map->GetName());
 
 	
 	GameObject* gun = new GameObject;
+	gun->SetName("gun");
 	gun->SetD3DDevice(m_Graphics->GetDevice());
 	gun->SetTexture(L"../Project/data/UMP_lambert1_BaseColor.dds");
 	gun->SetModel("../Project/data/UMP.obj");
-	gun->SetPosition(XMVectorGetX(m_camera->GetPosition()), -1.0, XMVectorGetZ(m_camera->GetPosition()));
+	gun->SetPosition(XMVectorGetX(m_camera->GetForwardVector()), -1.0, XMVectorGetZ(m_camera->GetPosition()));
 	gun->SetRotation(XMVectorGetX(m_camera->GetRotation()), XMVectorGetY(m_camera->GetRotation()), XMVectorGetZ(m_camera->GetRotation()));
 	gun->SetScale(0.1f, 0.1f, 0.1f);
-	m_gameObjectManager->AddGameObject(gun, "gun");
+	m_gameObjectManager->AddGameObject(gun, gun->GetName());
 
+	////////////GameObj with sphere
+	////////////
+	GameObject* testobj = new GameObject;
+	testobj->SetName("testobj");
+	testobj->SetD3DDevice(m_Graphics->GetDevice());
+	testobj->SetTexture(L"../Project/data/UMP_lambert1_BaseColor.dds");
+	testobj->SetModel("../Project/data/UMP.obj");
+	testobj->SetPosition(3,1, 5);
+	testobj->SetRotation(0, 1, 2);
+	testobj->SetScale(0.1f, 0.1f, 0.1f);
+	
+	CollisionSphere* colsp = new CollisionSphere;
+	colsp->UpdatePosition(testobj->GetPositionVec());
+	colsp->SetRadius(1.0f);
+	testobj->SetCollisionSphere(colsp);
+	m_gameObjectManager->AddGameObject(testobj, testobj->GetName());
 
+	GameObject* testobj2 = new GameObject;
+	testobj2->SetName("testobj2");
+	testobj2->SetD3DDevice(m_Graphics->GetDevice());
+	testobj2->SetTexture(L"../Project/data/UMP_lambert1_BaseColor.dds");
+	testobj2->SetModel("../Project/data/UMP.obj");
+	testobj2->SetPosition(2.5, 1, 5);
+	testobj2->SetRotation(0, 1, 2);
+	testobj2->SetScale(0.1f, 0.1f, 0.1f);
 
-	m_Graphics->InitialiseGameObjects(m_gameObjectManager);
+	CollisionSphere* colsp2 = new CollisionSphere;
+	colsp2->UpdatePosition(testobj->GetPositionVec());
+	colsp2->SetRadius(1.0f);
+	testobj2->SetCollisionSphere(colsp2);
+	m_gameObjectManager->AddGameObject(testobj2, testobj2->GetName());
+
+	m_collisionEngine->SetGameObjectManager(m_gameObjectManager);
+
+	m_Graphics->GetGameObjectManager(m_gameObjectManager);
 
 }
 
@@ -149,6 +189,20 @@ void SystemClass::Shutdown()
 		delete m_camera;
 		m_camera = 0;
 	}
+	// Release the graphics object.
+	if (m_gameObjectManager)
+	{
+		m_gameObjectManager->Shutdown();
+		delete m_gameObjectManager;
+		m_gameObjectManager = 0;
+	}
+
+	if (m_collisionEngine)
+	{
+		delete m_collisionEngine;
+		m_collisionEngine = 0;
+	}
+
 
 	// Release the graphics object.
 	if(m_Graphics)
@@ -254,7 +308,21 @@ bool SystemClass::UpdateDrawGamePlay()
 	
 	MoveCharacter(m_camera,m_gameObjectManager,m_Input);
 
+	//Test collision between objects
 
+	std::vector<string> collObjNames = m_collisionEngine->TestCollision();
+	
+	if (collObjNames.size() != 0)
+	{
+		for (int i = 0;i < collObjNames.size();i++)
+		{
+			std::string name = collObjNames[i];
+			if (collObjNames.size() >0 )
+			{	
+				m_gameObjectManager->RemoveGameObject(name);
+			}
+		}
+	}
 
 
 	result = m_Graphics->Frame();
@@ -263,7 +331,7 @@ bool SystemClass::UpdateDrawGamePlay()
 
 bool SystemClass::Frame()
 {
-	float dt = timer.GetMilisecondsElapsed();
+	float dt = (float)timer.GetMilisecondsElapsed();
 	timer.Restart();
 
 	bool result;
