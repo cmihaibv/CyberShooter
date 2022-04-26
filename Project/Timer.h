@@ -7,10 +7,10 @@ public:
 	Timer();
 	double GetMilisecondsElapsed();
 	void Restart();
-	bool Stop();
 	bool Start();
+	bool Stop();
 private:
-	bool isrunning = false;
+	bool m_isrunning = false;
 #ifdef _WIN32
 	std::chrono::time_point<std::chrono::steady_clock> start;
 	std::chrono::time_point<std::chrono::steady_clock> stop;

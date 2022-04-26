@@ -2,6 +2,9 @@
 #define _MODELCLASS_H_
 
 
+//////////////
+// INCLUDES //
+//////////////
 #include <d3d11.h>
 #include <DirectXMath.h>
 #include <fstream>

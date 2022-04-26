@@ -3,10 +3,21 @@
 GameObject::GameObject()
 {
 	//m_modelView = XMMatrixTranslation(m_position.x, m_position.y, m_position.z) * XMMatrixRotationY(m_rotation.y);
+	m_vecRight = XMVectorReplicateInt(0);
+	m_device = 0;
+	m_model = 0;
+	m_texture = 0;
+	m_vecForward = XMVectorReplicateInt(0);
+	m_vecLeft = XMVectorReplicateInt(0);
+	m_vecRight = XMVectorReplicateInt(0);
+	m_vecBackward = XMVectorReplicateInt(0);
+
+
 }
 
-GameObject::GameObject(const GameObject&)
+GameObject::GameObject(const GameObject& other)
 {
+
 }
 
 GameObject::~GameObject()
@@ -16,6 +27,16 @@ GameObject::~GameObject()
 void GameObject::SetD3DDevice(ID3D11Device* device)
 {
 	m_device = device;
+}
+
+void GameObject::SetName(string name)
+{
+	m_name = name;
+}
+
+string GameObject::GetName()
+{
+	return m_name;
 }
 
 bool GameObject::SetTexture(const WCHAR* texLocation)
@@ -138,9 +159,29 @@ XMFLOAT3& GameObject::GetPosition()
 	return m_position;
 }
 
+XMVECTOR& GameObject::GetPositionVec()
+{
+	return m_posVec;
+}
+
 XMMATRIX& GameObject::modelMatrix()
 {
 	return m_modelView;
+}
+
+void GameObject::SetCollisionSphere(CollisionSphere* collisionsphere)
+{
+	m_collisionsphere = collisionsphere;
+}
+
+CollisionSphere* GameObject::GetCollisionSphere()
+{
+	return m_collisionsphere;
+}
+
+void GameObject::UpdateCollision()
+{
+	m_collisionsphere->UpdatePosition(m_posVec);
 }
 
 void GameObject::ReleaseObject()

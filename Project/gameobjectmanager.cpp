@@ -17,8 +17,15 @@ GameObjectManager::~GameObjectManager()
 
 void GameObjectManager::AddGameObject(GameObject* gameobj, string gameobjname)
 {
-	m_gameObjects.insert({ gameobjname, gameobj });			// LHS name RHS gameobject !!
+	m_gameObjects.insert({ gameobjname, gameobj });			//  name & gameobject
 }
+
+void GameObjectManager::RemoveGameObject(string key)
+{
+	m_gameObjects.at(key)->ReleaseObject();
+	m_gameObjects.erase(key);
+}
+
 
 
 GameObject* GameObjectManager::GetGameObject(string gameobjname)

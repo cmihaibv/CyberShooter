@@ -1,6 +1,3 @@
-////////////////////////////////////////////////////////////////////////////////
-// Filename: lightshaderclass.cpp
-////////////////////////////////////////////////////////////////////////////////
 #include "lightshaderclass.h"
 
 
@@ -335,10 +332,6 @@ bool LightShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, X
 	LightBufferType* dataPtr2;
 
 
-	// Transpose the matrices to prepare them for the shader.
-	//worldMatrix = XMMatrixTranspose(worldMatrix);
-	//viewMatrix = XMMatrixTranspose(viewMatrix);
-	//projectionMatrix = XMMatrixTranspose(viewMatrix);
 
 	// Lock the constant buffer so it can be written to.
 	result = deviceContext->Map(m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
