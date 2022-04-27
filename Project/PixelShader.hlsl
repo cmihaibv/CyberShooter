@@ -49,11 +49,17 @@ float4 LightPixelShader(PixelInputType input) : SV_TARGET
     // Calculate the amount of light on this pixel.
     lightIntensity = saturate(dot(input.normal, lightDir));
 
+    // No more black faces, the ones that are not hit by light at all will have some light
+    if (lightIntensity == 0.0)
+    {
+        lightIntensity = 0.4;
+    }
+    
     // Determine the final amount of diffuse colour based on the diffuse colour combined with the light intensity.
-    color = saturate(diffuseColor * lightIntensity);
-
+    color = saturate(diffuseColor * lightIntensity); 
+    
     // Multiply the texture pixel and the final diffuse colour to get the final pixel colour result.
-    color = /*color **/textureColor;
+    color = color * textureColor;
 
     return color;
 }
