@@ -1,6 +1,9 @@
 #ifndef _TEXTURECLASS_H_
 #define _TEXTURECLASS_H_
 
+//////////////
+// INCLUDES //
+//////////////
 #include <d3d11.h>
 #include <DirectXMath.h>
 #include "DDSTextureLoader11.h"

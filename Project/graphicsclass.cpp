@@ -5,7 +5,6 @@ GraphicsClass::GraphicsClass()
 {
 	m_D3D = 0;
 	m_Camera = 0;
-	m_Model = 0;
 	m_LightShader = 0;
 	m_Light = 0;
 }
@@ -46,33 +45,6 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	{
 		return false;
 	}
-
-	//// Create the model object.
-	//m_Model = new ModelClass;
-	//if (!m_Model)
-	//{
-	//	return false;
-	//}
-
-	//m_Texture = new TextureClass;
-	//if (!m_Texture)
-	//{
-	//	return false;
-	//}
-
-	//result = m_Texture->Initialize(m_D3D->GetDevice(), L"../Project/data/guntex.dds");
-	//if (!result)
-	//{
-	//	return false;
-	//}
-
-	//// Initialize the model object.
-	//result = m_Model->Initialize(m_D3D->GetDevice(), "../Project/data/mp5k.obj", m_Texture);
-	//if (!result)
-	//{
-	//	MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
-	//	return false;
-	//}
 
 	// Create the light shader object.
 	m_LightShader = new LightShaderClass;
@@ -121,13 +93,6 @@ void GraphicsClass::Shutdown()
 		m_LightShader = 0;
 	}
 
-	// Release the game object manager.
-	if (m_gameObjectManager)
-	{
-		m_gameObjectManager->Shutdown();
-		delete m_gameObjectManager;
-		m_gameObjectManager = 0;
-	}
 
 	// Release the D3D object.
 	if (m_D3D)
@@ -165,7 +130,7 @@ void GraphicsClass::SetCamera(CameraClass* cam)
 	m_Camera = cam;
 }
 
-void GraphicsClass::InitialiseGameObjects(GameObjectManager* gameobjmgr)
+void GraphicsClass::GetGameObjectManager(GameObjectManager* gameobjmgr)
 {
 	m_gameObjectManager = gameobjmgr;
 }
@@ -210,37 +175,6 @@ bool GraphicsClass::Render()
 		}
 	}
 
-
-	
-	//// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
-	////m_gameobj->m_model->Render(m_D3D->GetDeviceContext());
-
-	// Get the world, view, and projection matrices from the camera and objects.
-	//worldMatrix = m_gameobj->modelMatrix();
-	//viewMatrix = m_Camera->GetViewMatrix();
-	//projectionMatrix = m_Camera->GetProjectionMatrix();
-
-
-	//// Render the model using the light shader.
-	//result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_gameobj->m_model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
-	//	m_gameobj->m_model->GetTexture(), m_Light->GetDirection(), m_Light->GetDiffuseColor());
-	//if (!result)
-	//{
-	//	return false;
-	//}
-
-	/*GameObject* gobj;
-
-	gobj = m_gameObjectManager->GetGameObject("gun");
-
-	worldMatrix = XMMatrixRotationY(115)* XMMatrixTranslation(13.f, 3.f, 130.f) ;*/
-
-	//result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
-	//	m_Model->GetTexture(), m_Light->GetDirection(), m_Light->GetDiffuseColor());
-	//if (!result)
-	//{
-	//	return false;
-	//}
 
 	// Present the rendered scene to the screen.
 	m_D3D->EndScene();

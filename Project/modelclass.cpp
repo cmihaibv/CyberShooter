@@ -327,16 +327,3 @@ void ModelClass::ReleaseModel()
 
 	return;
 }
-
-
-
-
-
-
-//// Seperate file:
-//class Framework
-//{
-//	Renderer m_renderer;
-//	//... Model manager
-//	// Resource managers
-//}

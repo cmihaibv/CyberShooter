@@ -16,6 +16,7 @@ public:
 	~GameObjectManager();
 
 	void AddGameObject(GameObject*, string);
+	void RemoveGameObject(string);
 	GameObject* GetGameObject(string);
 	std::unordered_map<std::string, GameObject*> GetGameObjects();
 
@@ -26,7 +27,5 @@ private:
 	std::unordered_map<std::string, GameObject*> m_gameObjects;
 
 };
-
-
 
 #endif

@@ -1,10 +1,9 @@
 #ifndef _GRAPHICSCLASS_H_
 #define _GRAPHICSCLASS_H_
 
-
-///////////////////////
-// MY CLASS INCLUDES //
-///////////////////////
+//////////////
+// INCLUDES //
+//////////////
 #include "d3dclass.h"
 #include "cameraclass.h"
 #include "modelclass.h"
@@ -36,20 +35,17 @@ public:
 	ID3D11Device* GetDevice();
 
 	void SetCamera(CameraClass* cam);
-	void InitialiseGameObjects(GameObjectManager*);
+	void GetGameObjectManager(GameObjectManager*);
 
 private:
 	bool Render();
 
 private:
-	D3DClass* m_D3D;
-	CameraClass* m_Camera;
-	ModelClass* m_Model;
+	D3DClass* m_D3D; // pointer to d3d instance
+	CameraClass* m_Camera; // pointer to camera instance
 	LightShaderClass* m_LightShader;
 	LightClass* m_Light;
-	TextureClass* m_Texture;
 
-	//beta
 	GameObjectManager* m_gameObjectManager;
 };
 
