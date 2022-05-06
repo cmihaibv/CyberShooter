@@ -84,6 +84,12 @@
     <ClCompile Include="CollisionSphere.cpp">
       <Filter>GameEngine</Filter>
     </ClCompile>
+    <ClCompile Include="TextureManager.cpp">
+      <Filter>GameEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelManager.cpp">
+      <Filter>GameEngine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cameraclass.h">
@@ -141,6 +147,12 @@
       <Filter>GameEngine</Filter>
     </ClInclude>
     <ClInclude Include="CollisionSphere.h">
+      <Filter>GameEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureManager.h">
+      <Filter>GameEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelManager.h">
       <Filter>GameEngine</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,6 +1,5 @@
 #include "systemclass.h"
 
-
 SystemClass::SystemClass()
 {
 	m_Input = 0;
@@ -66,6 +65,15 @@ bool SystemClass::Initialize()
 		return false;
 	}
 
+	m_texManager = new TextureManager;
+	if (!m_texManager)
+	{
+		return false;
+	}
+	m_texManager->SetD3DDevice(m_Graphics->GetDevice());
+
+	m_modelManager = new ModelManager;
+	m_modelManager->SetD3DDevice(m_Graphics->GetDevice());
 
 	// Create the camera object.
 	m_camera = new CameraClass;
@@ -121,12 +129,17 @@ void SystemClass::InitialiseObjects()
 	//obj->SetRotation(0, 120.f, 0);
 	//m_Graphics->InitialiseGameObject(obj, "gun2");
 
+	m_texManager->InitialiseTexture("maptex", L"../Project/data/maptex.dds");
+	m_texManager->InitialiseTexture("weapontex", L"../Project/data/UMP_lambert1_BaseColor.dds");
+	m_modelManager->InitialiseModel("mapmodel", "../Project/data/map.obj");
+	m_modelManager->InitialiseModel("umpmodel", "../Project/data/UMP.obj");
+
 
 	GameObject* map = new GameObject;
 	map->SetName("map");
 	map->SetD3DDevice(m_Graphics->GetDevice());
-	map->SetTexture(L"../Project/data/maptex.dds");
-	map->SetModel("../Project/data/map.obj");
+	map->SetTexture(m_texManager->GetTexture("maptex"));
+	map->SetModel(m_modelManager->GetModel("mapmodel"));
 	map->SetPosition(0, -2.0f, 0.f);
 	map->SetRotation(0, 120.f, 0);
 	m_gameObjectManager->AddGameObject(map, map->GetName());
@@ -135,8 +148,8 @@ void SystemClass::InitialiseObjects()
 	GameObject* gun = new GameObject;
 	gun->SetName("gun");
 	gun->SetD3DDevice(m_Graphics->GetDevice());
-	gun->SetTexture(L"../Project/data/UMP_lambert1_BaseColor.dds");
-	gun->SetModel("../Project/data/UMP.obj");
+	gun->SetTexture(m_texManager->GetTexture("weapontex"));
+	gun->SetModel(m_modelManager->GetModel("umpmodel"));
 	gun->SetPosition(XMVectorGetX(m_camera->GetForwardVector()), -1.0, XMVectorGetZ(m_camera->GetPosition()));
 	gun->SetRotation(XMVectorGetX(m_camera->GetRotation()), XMVectorGetY(m_camera->GetRotation()), XMVectorGetZ(m_camera->GetRotation()));
 	gun->SetScale(0.1f, 0.1f, 0.1f);
@@ -147,8 +160,8 @@ void SystemClass::InitialiseObjects()
 	GameObject* testobj = new GameObject;
 	testobj->SetName("testobj");
 	testobj->SetD3DDevice(m_Graphics->GetDevice());
-	testobj->SetTexture(L"../Project/data/UMP_lambert1_BaseColor.dds");
-	testobj->SetModel("../Project/data/UMP.obj");
+	testobj->SetTexture(m_texManager->GetTexture("weapontex"));
+	testobj->SetModel(m_modelManager->GetModel("umpmodel"));
 	testobj->SetPosition(3,1, 5);
 	testobj->SetRotation(0, 1, 2);
 	testobj->SetScale(0.1f, 0.1f, 0.1f);
@@ -162,8 +175,8 @@ void SystemClass::InitialiseObjects()
 	GameObject* testobj2 = new GameObject;
 	testobj2->SetName("testobj2");
 	testobj2->SetD3DDevice(m_Graphics->GetDevice());
-	testobj2->SetTexture(L"../Project/data/UMP_lambert1_BaseColor.dds");
-	testobj2->SetModel("../Project/data/UMP.obj");
+	testobj2->SetTexture(m_texManager->GetTexture("weapontex"));
+	testobj2->SetModel(m_modelManager->GetModel("umpmodel"));
 	testobj2->SetPosition(2.5, 1, 5);
 	testobj2->SetRotation(0, 1, 2);
 	testobj2->SetScale(0.1f, 0.1f, 0.1f);
@@ -195,6 +208,14 @@ void SystemClass::Shutdown()
 		m_gameObjectManager->Shutdown();
 		delete m_gameObjectManager;
 		m_gameObjectManager = 0;
+	}
+
+	// Release the graphics object.
+	if (m_texManager)
+	{
+		m_texManager->ReleaseTextures();
+		delete m_texManager;
+		m_texManager = 0;
 	}
 
 	if (m_collisionEngine)

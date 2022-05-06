@@ -32,8 +32,8 @@ public:
 	/// </summary>
 	/// <param name=""> WCHAR filepath</param>
 	/// <returns></returns>
-	bool SetTexture(const WCHAR*);
-	bool SetModel(const char*);
+	bool SetTexture(TextureClass*/*const WCHAR**/);
+	bool SetModel(ModelClass*/*const char**/);
 
 	void SetPosition(float, float, float);
 	void SetRotation(float, float, float);

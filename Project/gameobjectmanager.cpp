@@ -26,8 +26,6 @@ void GameObjectManager::RemoveGameObject(string key)
 	m_gameObjects.erase(key);
 }
 
-
-
 GameObject* GameObjectManager::GetGameObject(string gameobjname)
 {
 	
@@ -50,6 +48,5 @@ void GameObjectManager::Shutdown()
 
 	}
 	m_gameObjects.clear();
-
 }
 

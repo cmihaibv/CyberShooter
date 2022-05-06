@@ -22,11 +22,14 @@
 ///////////////////////
 #include "inputclass.h"
 #include "graphicsclass.h"
+#include "TextureManager.h"
+#include "ModelManager.h"
 #include "gameobjectmanager.h"
 #include "cameraclass.h"
 #include "mouse.h"
 #include "Timer.h"
 #include "CollisionEngine.h"
+
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -71,6 +74,8 @@ private:
 	Timer timer;
 
 	CameraClass* m_camera;
+	TextureManager* m_texManager;
+	ModelManager* m_modelManager;
 	GameObjectManager* m_gameObjectManager;
 	CollisionEngine* m_collisionEngine;
 

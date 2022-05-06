@@ -23,7 +23,7 @@ ModelClass::~ModelClass()
 }
 
 
-bool ModelClass::Initialize(ID3D11Device* device, const char* modelFilename, TextureClass* texture)
+bool ModelClass::Initialize(ID3D11Device* device, const char* modelFilename)
 {
 	bool result;
 
@@ -39,8 +39,6 @@ bool ModelClass::Initialize(ID3D11Device* device, const char* modelFilename, Tex
 	{
 		return false;
 	}
-
-	this->m_Texture = texture;
 
 	return true;
 }

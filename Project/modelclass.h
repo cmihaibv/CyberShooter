@@ -39,7 +39,7 @@ public:
 	ModelClass(const ModelClass&);
 	~ModelClass();
 
-	bool Initialize(ID3D11Device*, const char*, TextureClass*);
+	bool Initialize(ID3D11Device*, const char*);
 
 	void Shutdown();
 	void Render(ID3D11DeviceContext*);

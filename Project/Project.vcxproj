@@ -24,10 +24,12 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="modelclass.cpp" />
     <ClCompile Include="gameobjectmanager.cpp" />
+    <ClCompile Include="ModelManager.cpp" />
     <ClCompile Include="mouse.cpp" />
     <ClCompile Include="mouseevent.cpp" />
     <ClCompile Include="systemclass.cpp" />
     <ClCompile Include="textureclass.cpp" />
+    <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -44,10 +46,12 @@
     <ClInclude Include="lightshaderclass.h" />
     <ClInclude Include="modelclass.h" />
     <ClInclude Include="gameobjectmanager.h" />
+    <ClInclude Include="ModelManager.h" />
     <ClInclude Include="mouse.h" />
     <ClInclude Include="mouseevent.h" />
     <ClInclude Include="systemclass.h" />
     <ClInclude Include="textureclass.h" />
+    <ClInclude Include="TextureManager.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="tiny_obj_loader.h" />
   </ItemGroup>

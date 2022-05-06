@@ -39,43 +39,49 @@ string GameObject::GetName()
 	return m_name;
 }
 
-bool GameObject::SetTexture(const WCHAR* texLocation)
+bool GameObject::SetTexture(TextureClass* texture)
 {
-	bool result;
+	//bool result;
 
-	m_texture = new TextureClass;
-	if (!m_texture)
-	{
-		return false;
-	}
+	//m_texture = new TextureClass;
+	//if (!m_texture)
+	//{
+	//	return false;
+	//}
 
-	result = m_texture->Initialize(m_device, texLocation);	// replace hardcoded location with texLocation !!!!!! L"../Project/data/guntex.dds"
-	if (!result)
-	{
-		//MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
-		return false;
-	}
+	//result = m_texture->Initialize(m_device, texLocation);	// replace hardcoded location with texLocation !!!!!! L"../Project/data/guntex.dds"
+	//if (!result)
+	//{
+	//	//MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+	//	return false;
+	//}
+	m_texture = texture;
 	
 	return true;
 }
 
-bool GameObject::SetModel(const char* modelLocation)
+bool GameObject::SetModel(ModelClass* model)
 {
-	bool result;
+	//bool result;
 
-	m_model = new ModelClass;
-	if (!m_model)
-	{
-		return false;
-	}
+	//m_model = new ModelClass;
+	//if (!m_model)
+	//{
+	//	return false;
+	//}
 
 
-	result = m_model->Initialize(m_device, modelLocation, m_texture);		// replace hardcoded location with texLocation !!!!!! "../Project/data/mp5k.obj"
-	if (!result)
-	{
-		//MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
-		return false;
-	}
+	//result = m_model->Initialize(m_device, modelLocation);		// replace hardcoded location with texLocation !!!!!! "../Project/data/mp5k.obj"
+	//if (!result)
+	//{
+	//	//MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+	//	return false;
+	//}
+	////Set Texture to the model ( no default texture available)
+	//m_model->SetTexture(m_texture);
+
+	m_model = model;
+	m_model->SetTexture(m_texture);
 	return true;
 }
 
@@ -186,19 +192,19 @@ void GameObject::UpdateCollision()
 
 void GameObject::ReleaseObject()
 {
-	if (m_model)
-	{
-		m_model->Shutdown();
-		delete m_model;
-		m_model = 0;
-	}
+	//if (m_model)
+	//{
+	//	m_model->Shutdown();
+	//	delete m_model;
+	//	m_model = 0;
+	//}
 
-	if (m_texture)
-	{
-		m_texture->Shutdown();
-		delete m_model;
-		m_texture = 0;
-	}
+	//if (m_texture)
+	//{
+	//	m_texture->Shutdown();
+	//	delete m_model;
+	//	m_texture = 0;
+	//}
 
 
 }
