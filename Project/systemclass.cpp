@@ -112,10 +112,12 @@ void SystemClass::InitialiseObjects()
 	m_texManager->InitialiseTexture("maptex", L"../Project/data/maptex.dds");
 	m_texManager->InitialiseTexture("weapontex", L"../Project/data/UMP_lambert1_BaseColor.dds");
 	m_texManager->InitialiseTexture("enemytex", L"../Project/data/Cyborg-Enemy_DIF.dds");
+	m_texManager->InitialiseTexture("bullettex", L"../Project/data/Metal038_1K_Color.dds");
 
 	m_modelManager->InitialiseModel("mapmodel", "../Project/data/map.obj");
 	m_modelManager->InitialiseModel("umpmodel", "../Project/data/UMP.obj");
 	m_modelManager->InitialiseModel("enemymodel", "../Project/data/enemymodel.obj");
+	m_modelManager->InitialiseModel("bulletmodel", "../Project/data/bulletmats.obj");
 
 	GameObject* map = new GameObject;
 	map->SetName("map");
@@ -305,10 +307,47 @@ bool CheckNewPos(XMFLOAT3& move)
 	vector<vector<vector<int>>> walkareas;
 	walkareas.push_back(walkArea);
 
+	xMin = -27;
+	xMax = -18;
+
+	zMin = -8;
+	zMax = 0;
+
+	walkArea = {
+		{ xMin, xMax},
+		{ zMin, zMax}
+	};
+	walkareas.push_back(walkArea);
+
+	xMin = -47;
+	xMax = -27;
+
+	zMin = -23;
+	zMax = 15;
+
+	walkArea = {
+		{ xMin, xMax},
+		{ zMin, zMax}
+	};
+
+	walkareas.push_back(walkArea);
+
+	xMin = -47;
+	xMax = -40;
+
+	zMin = -47;
+	zMax = -23;
+
+	walkArea = {
+		{ xMin, xMax},
+		{ zMin, zMax}
+	};
+	walkareas.push_back(walkArea);
+
 	for (int i = 0; i < walkareas.size();i++)
 	{
 		int a = walkareas.at(i)[0][1];
-		if (move.x >walkareas.at(i)[0][0] && move.x <walkareas.at(i)[0][1])
+		if (move.x > walkareas.at(i)[0][0] && move.x < walkareas.at(i)[0][1])
 		{
 			if (move.z > walkareas.at(i)[1][0] && move.z < walkareas.at(i)[1][1])
 			{
@@ -400,8 +439,8 @@ void Shoot(GameObjectManager* gObjMgr,ModelManager* mMgr,TextureManager* texMgr,
 	bulletsArray.push_back(name);
 	bullet->SetName(name);
 	bullet->SetD3DDevice(graphics->GetDevice());
-	bullet->SetTexture(texMgr->GetTexture("weapontex"));
-	bullet->SetModel(mMgr->GetModel("umpmodel"));
+	bullet->SetTexture(texMgr->GetTexture("bullettex"));
+	bullet->SetModel(mMgr->GetModel("bulletmodel"));
 	bullet->SetPosition(XMVectorGetX(gObjMgr->GetGameObject("gun")->GetPositionVec()), -1.0, XMVectorGetZ(gObjMgr->GetGameObject("gun")->GetPositionVec()));// under work
 	bullet->SetRotation(XMVectorGetX(gObjMgr->GetGameObject("gun")->GetRotation()), XMVectorGetY(gObjMgr->GetGameObject("gun")->GetRotation()), XMVectorGetZ(gObjMgr->GetGameObject("gun")->GetRotation()));
 	bullet->SetScale(0.1f, 0.1f, 0.1f);
@@ -418,12 +457,17 @@ void CheckBulletsAlive(GameObjectManager* gObjMgr, vector<string>& bulletsArray)
 	std::vector<string> updatedlist;
 	for (int i=0; i<bulletsArray.size();i++)
 	{
-
 		if (gObjMgr->GetGameObject(bulletsArray.at(i)) != nullptr)
 		{
-			updatedlist.push_back(bulletsArray.at(i));
-		}
-			
+			if (gObjMgr->GetGameObject(bulletsArray.at(i))->Alive() == false)
+			{
+				gObjMgr->RemoveGameObject(bulletsArray.at(i));		
+			}
+			else
+			{
+				updatedlist.push_back(bulletsArray.at(i));
+			}		
+		}	
 	}
 	bulletsArray = updatedlist;
 }
@@ -450,18 +494,19 @@ bool SystemClass::UpdateDrawGamePlay(float dt)
 
 	//Shoot 
 
-
 	//Check what bullets are allive if any
 
 	// Timer for shooting
 		shootTimer += dt;
-	if (m_Input->IsKeyDown(0x20) && shootTimer>1000.f)
+	if (m_Input->IsKeyDown(0x20) && shootTimer>100.f)
 	{
 		Shoot(m_gameObjectManager, m_modelManager, m_texManager, m_Graphics,bulletsArray);
 		shootTimer = 0;
 	}
 	if (bulletsArray.size() != 0)
 	{
+		//if bullets reach 222 units remove it
+		//RemoveBullets(m_gameObjectManager);
 		CheckBulletsAlive(m_gameObjectManager, bulletsArray);
 		UpdateBulletsPosition(m_gameObjectManager, bulletsArray);
 	}

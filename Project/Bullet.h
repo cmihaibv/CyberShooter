@@ -10,14 +10,24 @@ using namespace std;
 class Bullet : public GameObject
 {
 public:
+	bool Alive()
+	{
+		if (distanceCount == 100)
+		{
+			return false;
+		}
+		return true;
+	}
 	void Action() override
 	{
 		//MoveForward
-		XMVECTOR move = GetForwardVector() * 0.01f;
+		XMVECTOR move = GetForwardVector() * 0.45f;
 
+		distanceCount += 1;
 		UpdatePosition(move);
 	}
-
+protected:
+	int distanceCount = 0;
 };
 
 #endif

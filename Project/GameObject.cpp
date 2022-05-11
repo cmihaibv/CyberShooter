@@ -176,8 +176,12 @@ void GameObject::Action()
 {
 
 }
-
+bool GameObject::Alive()
+{
+	return true;
+}
 void GameObject::ReleaseObject()
 {
 
 }
+

@@ -57,8 +57,9 @@ public:
 	void SetCollisionSphere(CollisionSphere*);
 	CollisionSphere* GetCollisionSphere();
 	void UpdateCollision();
-	virtual void Action();
 
+	virtual void Action();
+	virtual bool Alive();
 
 	void ReleaseObject();
 
