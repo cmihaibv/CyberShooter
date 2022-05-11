@@ -17,7 +17,7 @@ GameObject::GameObject()
 
 GameObject::GameObject(const GameObject& other)
 {
-
+	memcpy(this, &other, sizeof(GameObject));
 }
 
 GameObject::~GameObject()
@@ -41,45 +41,13 @@ string GameObject::GetName()
 
 bool GameObject::SetTexture(TextureClass* texture)
 {
-	//bool result;
 
-	//m_texture = new TextureClass;
-	//if (!m_texture)
-	//{
-	//	return false;
-	//}
-
-	//result = m_texture->Initialize(m_device, texLocation);	// replace hardcoded location with texLocation !!!!!! L"../Project/data/guntex.dds"
-	//if (!result)
-	//{
-	//	//MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
-	//	return false;
-	//}
 	m_texture = texture;
-	
 	return true;
 }
 
 bool GameObject::SetModel(ModelClass* model)
 {
-	//bool result;
-
-	//m_model = new ModelClass;
-	//if (!m_model)
-	//{
-	//	return false;
-	//}
-
-
-	//result = m_model->Initialize(m_device, modelLocation);		// replace hardcoded location with texLocation !!!!!! "../Project/data/mp5k.obj"
-	//if (!result)
-	//{
-	//	//MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
-	//	return false;
-	//}
-	////Set Texture to the model ( no default texture available)
-	//m_model->SetTexture(m_texture);
-
 	m_model = model;
 	m_model->SetTexture(m_texture);
 	return true;
@@ -91,6 +59,10 @@ void GameObject::SetPosition(float xposition,float yposition, float zposition)
 	m_position.y = yposition;
 	m_position.z = zposition;
 	m_posVec = XMLoadFloat3(&m_position);
+	if (m_collisionsphere != nullptr)
+	{
+		m_collisionsphere->UpdatePosition(m_posVec);
+	}
 	UpdateModelMatrix();
 }
 
@@ -117,13 +89,19 @@ void GameObject::UpdatePosition(XMVECTOR& pos)
 
 	m_posVec += pos;
 	XMStoreFloat3(&m_position, m_posVec);
+	if (m_collisionsphere != nullptr)
+	{
+		m_collisionsphere->UpdatePosition(m_posVec);
+	}
+	
 	UpdateModelMatrix();
 
 }
 
 void GameObject::UpdateRotation(XMVECTOR& rot)
 {
-
+	m_rotVec = rot;
+	UpdateModelMatrix();
 }
 
 void GameObject::UpdateModelMatrix()
@@ -170,6 +148,11 @@ XMVECTOR& GameObject::GetPositionVec()
 	return m_posVec;
 }
 
+XMVECTOR& GameObject::GetRotation()
+{
+	return m_rotVec;
+}
+
 XMMATRIX& GameObject::modelMatrix()
 {
 	return m_modelView;
@@ -189,22 +172,12 @@ void GameObject::UpdateCollision()
 {
 	m_collisionsphere->UpdatePosition(m_posVec);
 }
+void GameObject::Action()
+{
+
+}
 
 void GameObject::ReleaseObject()
 {
-	//if (m_model)
-	//{
-	//	m_model->Shutdown();
-	//	delete m_model;
-	//	m_model = 0;
-	//}
-
-	//if (m_texture)
-	//{
-	//	m_texture->Shutdown();
-	//	delete m_model;
-	//	m_texture = 0;
-	//}
-
 
 }

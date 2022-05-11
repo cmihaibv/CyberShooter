@@ -20,7 +20,7 @@ class GameObject
 {
 public:
 	GameObject();
-	GameObject(const GameObject&);
+	GameObject(const GameObject& other);
 	~GameObject();
 
 	void SetD3DDevice(ID3D11Device*);
@@ -51,11 +51,13 @@ public:
 	XMFLOAT3& GetPosition();
 	XMVECTOR& GetPositionVec();
 	XMMATRIX& modelMatrix();
+	XMVECTOR& GetRotation();
 
 	//beta : vector of collision
 	void SetCollisionSphere(CollisionSphere*);
 	CollisionSphere* GetCollisionSphere();
 	void UpdateCollision();
+	virtual void Action();
 
 
 	void ReleaseObject();
@@ -89,11 +91,8 @@ protected:
 	const XMVECTOR m_DefaultBackwardVec = XMVectorSet(0.0f, 0.0f, -1.0f, 0.0f);	// 
 	const XMVECTOR m_DefaultLeftVec = XMVectorSet(-1.0f, 0.0f, 0.0f, 0.0f);		//
 	const XMVECTOR m_DefaultRightVec = XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f);		//
-
-private:
 	string m_name;
 	CollisionSphere* m_collisionsphere = nullptr;
-
 };
 
 #endif

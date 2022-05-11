@@ -54,7 +54,7 @@ public:
 	void Shutdown();
 	void Run();
 
-	bool UpdateDrawGamePlay();
+	bool UpdateDrawGamePlay(float);
 
 
 	LRESULT CALLBACK MessageHandler(HWND, UINT, WPARAM, LPARAM);
@@ -80,6 +80,10 @@ private:
 	CollisionEngine* m_collisionEngine;
 
 	Gamedata::GameState mode = Gamedata::GameState::MAINMENU;
+
+
+	std::vector<string> bulletsArray;
+	float shootTimer;
 };
 
 

@@ -33,11 +33,13 @@
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Bullet.h" />
     <ClInclude Include="cameraclass.h" />
     <ClInclude Include="CollisionEngine.h" />
     <ClInclude Include="CollisionSphere.h" />
     <ClInclude Include="d3dclass.h" />
     <ClInclude Include="DDSTextureLoader11.h" />
+    <ClInclude Include="GameEntity.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="graphicsclass.h" />

@@ -27,9 +27,13 @@ void GameObjectManager::RemoveGameObject(string key)
 }
 
 GameObject* GameObjectManager::GetGameObject(string gameobjname)
-{
-	
-	return  m_gameObjects.at(gameobjname);
+{;
+	if (m_gameObjects.find(gameobjname) == m_gameObjects.end())
+	{
+		return nullptr;
+	}
+
+	return m_gameObjects.at(gameobjname);;
 }
 
 std::unordered_map<std::string, GameObject*> GameObjectManager::GetGameObjects()

@@ -7,6 +7,8 @@
 #include <string>
 #include "d3dclass.h"
 #include "GameObject.h"
+#include "GameEntity.h"
+#include "Bullet.h"
 
 
 class GameObjectManager {

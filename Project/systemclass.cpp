@@ -1,4 +1,5 @@
 #include "systemclass.h"
+#include "Bullet.h"
 
 SystemClass::SystemClass()
 {
@@ -88,7 +89,6 @@ bool SystemClass::Initialize()
 		return false;
 	}
 
-
 	m_camera->InitialiseProjection(screenWidth, screenHeight, SCREEN_NEAR, SCREEN_DEPTH);
 
 	// Set the initial position of the camera.
@@ -108,32 +108,14 @@ bool SystemClass::Initialize()
 
 void SystemClass::InitialiseObjects()
 {
-	
-	//for (int i = 0; i < 3;i++)
-	//{
-	//	GameObject* obj = new GameObject;
-
-	//	obj->SetD3DDevice(m_Graphics->GetDevice());
-	//	obj->SetTexture(L"../Project/data/guntex.dds");
-	//	obj->SetModel("../Project/data/mp5k.obj");
-	//	obj->SetPosition(0, -2.0f, 100.f*i);
-	//	obj->SetRotation(0, 120.f, 0);
-	//	m_Graphics->InitialiseGameObject(obj, std::to_string(i));
-
-	//}
-	//GameObject* obj = new GameObject;
-	//obj->SetD3DDevice(m_Graphics->GetDevice());
-	//obj->SetTexture(L"../Project/data/guntex.dds");
-	//obj->SetModel("../Project/data/mp5k.obj");
-	//obj->SetPosition(0, -2.0f, 200.f);
-	//obj->SetRotation(0, 120.f, 0);
-	//m_Graphics->InitialiseGameObject(obj, "gun2");
 
 	m_texManager->InitialiseTexture("maptex", L"../Project/data/maptex.dds");
 	m_texManager->InitialiseTexture("weapontex", L"../Project/data/UMP_lambert1_BaseColor.dds");
+	m_texManager->InitialiseTexture("enemytex", L"../Project/data/Cyborg-Enemy_DIF.dds");
+
 	m_modelManager->InitialiseModel("mapmodel", "../Project/data/map.obj");
 	m_modelManager->InitialiseModel("umpmodel", "../Project/data/UMP.obj");
-
+	m_modelManager->InitialiseModel("enemymodel", "../Project/data/enemymodel.obj");
 
 	GameObject* map = new GameObject;
 	map->SetName("map");
@@ -141,7 +123,7 @@ void SystemClass::InitialiseObjects()
 	map->SetTexture(m_texManager->GetTexture("maptex"));
 	map->SetModel(m_modelManager->GetModel("mapmodel"));
 	map->SetPosition(0, -2.0f, 0.f);
-	map->SetRotation(0, 120.f, 0);
+	map->SetRotation(0, 0, 0);
 	m_gameObjectManager->AddGameObject(map, map->GetName());
 
 	
@@ -155,24 +137,23 @@ void SystemClass::InitialiseObjects()
 	gun->SetScale(0.1f, 0.1f, 0.1f);
 	m_gameObjectManager->AddGameObject(gun, gun->GetName());
 
-	////////////GameObj with sphere
-	////////////
+	////////////GameObj
 	GameObject* testobj = new GameObject;
 	testobj->SetName("testobj");
 	testobj->SetD3DDevice(m_Graphics->GetDevice());
-	testobj->SetTexture(m_texManager->GetTexture("weapontex"));
-	testobj->SetModel(m_modelManager->GetModel("umpmodel"));
-	testobj->SetPosition(3,1, 5);
-	testobj->SetRotation(0, 1, 2);
-	testobj->SetScale(0.1f, 0.1f, 0.1f);
+	testobj->SetTexture(m_texManager->GetTexture("enemytex"));
+	testobj->SetModel(m_modelManager->GetModel("enemymodel"));
+	testobj->SetPosition(3,-3.5, 5);
+	testobj->SetRotation(0, 0, 0);
+	testobj->SetScale(5.0f, 5.0f, 5.0f);
 	
 	CollisionSphere* colsp = new CollisionSphere;
 	colsp->UpdatePosition(testobj->GetPositionVec());
-	colsp->SetRadius(1.0f);
+	colsp->SetRadius(3.0f);
 	testobj->SetCollisionSphere(colsp);
 	m_gameObjectManager->AddGameObject(testobj, testobj->GetName());
 
-	GameObject* testobj2 = new GameObject;
+	/*GameObject* testobj2 = new GameObject;
 	testobj2->SetName("testobj2");
 	testobj2->SetD3DDevice(m_Graphics->GetDevice());
 	testobj2->SetTexture(m_texManager->GetTexture("weapontex"));
@@ -185,7 +166,22 @@ void SystemClass::InitialiseObjects()
 	colsp2->UpdatePosition(testobj->GetPositionVec());
 	colsp2->SetRadius(1.0f);
 	testobj2->SetCollisionSphere(colsp2);
-	m_gameObjectManager->AddGameObject(testobj2, testobj2->GetName());
+	m_gameObjectManager->AddGameObject(testobj2, testobj2->GetName());*/
+
+	//Bullet* bullet = new Bullet;
+	//bullet->SetName("bullet");
+	//bullet->SetD3DDevice(m_Graphics->GetDevice());
+	//bullet->SetTexture(m_texManager->GetTexture("weapontex"));
+	//bullet->SetModel(m_modelManager->GetModel("umpmodel"));
+	//bullet->SetPosition(2.5, 1, 5);
+	//bullet->SetRotation(0, 1, 2);
+	//bullet->SetScale(0.1f, 0.1f, 0.1f);
+
+	//CollisionSphere* bullsp = new CollisionSphere;
+	//bullsp->UpdatePosition(bullet->GetPositionVec());
+	//bullsp->SetRadius(1.0f);
+	//bullet->SetCollisionSphere(bullsp);
+	//m_gameObjectManager->AddGameObject(bullet, bullet->GetName());
 
 	m_collisionEngine->SetGameObjectManager(m_gameObjectManager);
 
@@ -215,6 +211,13 @@ void SystemClass::Shutdown()
 	{
 		m_texManager->ReleaseTextures();
 		delete m_texManager;
+		m_texManager = 0;
+	}
+	// Release the graphics object.
+	if (m_modelManager)
+	{
+		m_modelManager->ReleaseModels();
+		delete m_modelManager;
 		m_texManager = 0;
 	}
 
@@ -286,29 +289,77 @@ void SystemClass::Run()
 
 	return;
 }
-
-void MoveCharacter(CameraClass* camera, GameObjectManager* gamemgr,InputClass* input)
+bool CheckNewPos(XMFLOAT3& move)
 {
-	float cameraVel = 0.1f;
+	int xMin = -18;
+	int xMax = 13;
+
+	int zMin = -23;
+	int zMax = 15;
+
+	vector<vector<int>> walkArea = {
+		{ xMin, xMax},
+		{ zMin, zMax}
+	};
+
+	vector<vector<vector<int>>> walkareas;
+	walkareas.push_back(walkArea);
+
+	for (int i = 0; i < walkareas.size();i++)
+	{
+		int a = walkareas.at(i)[0][1];
+		if (move.x >walkareas.at(i)[0][0] && move.x <walkareas.at(i)[0][1])
+		{
+			if (move.z > walkareas.at(i)[1][0] && move.z < walkareas.at(i)[1][1])
+			{
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
+void MoveCharacter(CameraClass* camera, GameObjectManager* gamemgr,InputClass* input,float dt)
+{
+	float cameraVel = 0.03f;
 
 	//Store pointer of the gameobject into a variable
 	GameObject* gameobj = gamemgr->GetGameObject("gun");
 
+	//Save Actual position
+	XMFLOAT3 actualCamPos;
+	XMStoreFloat3(&actualCamPos, camera->GetPosition());
+	XMFLOAT3 actualGunPos = gameobj->GetPosition();
+
 	if (input->IsKeyDown(0x28)) // Move camera and weapon back
 	{
-		XMVECTOR moveBack = camera->GetBackwardVector() * cameraVel;
+		// New position
+		XMVECTOR moveBack = camera->GetBackwardVector() * cameraVel * dt;
 
 		camera->UpdatePosition(moveBack);
-		moveBack = gameobj->GetBackwardVector() * cameraVel;
+		moveBack = gameobj->GetBackwardVector() * cameraVel * dt;
+		
 		gameobj->UpdatePosition(moveBack);
+
+
 	}
 	if (input->IsKeyDown(0x26)) // Move camera and weapon forward
 	{
-		XMVECTOR moveForward = camera->GetForwardVector() * cameraVel;
+		XMVECTOR moveForward = camera->GetForwardVector() * cameraVel * dt;
 		camera->UpdatePosition(moveForward);
 
-		moveForward = gameobj->GetForwardVector() * cameraVel;
+		moveForward = gameobj->GetForwardVector() * cameraVel * dt;
 		gameobj->UpdatePosition(moveForward);
+	}
+	// Store new gun position
+	XMFLOAT3 newGunPos = gameobj->GetPosition();
+
+	//Check new position
+	if (CheckNewPos(newGunPos) == false)
+	{
+		camera->SetPosition(actualCamPos.x, actualCamPos.y, actualCamPos.z);
+		gameobj->SetPosition(actualGunPos.x, actualGunPos.y, actualGunPos.z);
 	}
 	if (input->IsKeyDown(0x25)) // Rotate camera 
 	{
@@ -321,30 +372,103 @@ void MoveCharacter(CameraClass* camera, GameObjectManager* gamemgr,InputClass* i
 
 	//Rotate weapon
 	gameobj->SetRotation(XMVectorGetX(camera->GetRotation()), XMVectorGetY(camera->GetRotation()), XMVectorGetZ(camera->GetRotation()));
+
+
 }
-
-bool SystemClass::UpdateDrawGamePlay()
+void TestCollision(CollisionEngine* collEngptr,GameObjectManager* gObjMgr)
 {
-	bool result;
-	
-	MoveCharacter(m_camera,m_gameObjectManager,m_Input);
+	std::vector<string> collObjNames = collEngptr->TestCollision();
 
-	//Test collision between objects
-
-	std::vector<string> collObjNames = m_collisionEngine->TestCollision();
-	
 	if (collObjNames.size() != 0)
 	{
 		for (int i = 0;i < collObjNames.size();i++)
 		{
 			std::string name = collObjNames[i];
-			if (collObjNames.size() >0 )
-			{	
-				m_gameObjectManager->RemoveGameObject(name);
+			if (collObjNames.size() > 0)
+			{
+				gObjMgr->RemoveGameObject(name);
 			}
 		}
 	}
+}
 
+void Shoot(GameObjectManager* gObjMgr,ModelManager* mMgr,TextureManager* texMgr,GraphicsClass* graphics,vector<string>& bulletsArray)
+{
+	Bullet* bullet = new Bullet;
+	
+	string name = "bull" + std::to_string(gObjMgr->GetGameObjects().size()) + std::to_string(std::rand() % 100 + 1);		//random name
+	bulletsArray.push_back(name);
+	bullet->SetName(name);
+	bullet->SetD3DDevice(graphics->GetDevice());
+	bullet->SetTexture(texMgr->GetTexture("weapontex"));
+	bullet->SetModel(mMgr->GetModel("umpmodel"));
+	bullet->SetPosition(XMVectorGetX(gObjMgr->GetGameObject("gun")->GetPositionVec()), -1.0, XMVectorGetZ(gObjMgr->GetGameObject("gun")->GetPositionVec()));// under work
+	bullet->SetRotation(XMVectorGetX(gObjMgr->GetGameObject("gun")->GetRotation()), XMVectorGetY(gObjMgr->GetGameObject("gun")->GetRotation()), XMVectorGetZ(gObjMgr->GetGameObject("gun")->GetRotation()));
+	bullet->SetScale(0.1f, 0.1f, 0.1f);
+	
+
+	CollisionSphere* bullsp = new CollisionSphere;
+	bullsp->UpdatePosition(bullet->GetPositionVec());
+	bullsp->SetRadius(1.0f);
+	bullet->SetCollisionSphere(bullsp);
+	gObjMgr->AddGameObject(bullet, bullet->GetName());
+}
+void CheckBulletsAlive(GameObjectManager* gObjMgr, vector<string>& bulletsArray)
+{
+	std::vector<string> updatedlist;
+	for (int i=0; i<bulletsArray.size();i++)
+	{
+
+		if (gObjMgr->GetGameObject(bulletsArray.at(i)) != nullptr)
+		{
+			updatedlist.push_back(bulletsArray.at(i));
+		}
+			
+	}
+	bulletsArray = updatedlist;
+}
+void UpdateBulletsPosition(GameObjectManager* gObjMgr, vector<string>& bulletsArray)
+{
+	for (int i = 0; i < bulletsArray.size();i++)
+	{
+
+		if (gObjMgr->GetGameObject(bulletsArray.at(i)) != nullptr)
+		{
+			gObjMgr->GetGameObject(bulletsArray.at(i))->Action();
+		}
+
+	}
+}
+
+bool SystemClass::UpdateDrawGamePlay(float dt)
+{
+	bool result;
+
+	//move character each frame
+	MoveCharacter(m_camera,m_gameObjectManager,m_Input,dt);
+
+
+	//Shoot 
+
+
+	//Check what bullets are allive if any
+
+	// Timer for shooting
+		shootTimer += dt;
+	if (m_Input->IsKeyDown(0x20) && shootTimer>1000.f)
+	{
+		Shoot(m_gameObjectManager, m_modelManager, m_texManager, m_Graphics,bulletsArray);
+		shootTimer = 0;
+	}
+	if (bulletsArray.size() != 0)
+	{
+		CheckBulletsAlive(m_gameObjectManager, bulletsArray);
+		UpdateBulletsPosition(m_gameObjectManager, bulletsArray);
+	}
+	
+
+	//Test collision between objects
+	TestCollision(m_collisionEngine, m_gameObjectManager);
 
 	result = m_Graphics->Frame();
 	return result;
@@ -358,6 +482,7 @@ bool SystemClass::Frame()
 	bool result;
 
 
+
 	// Check if the user pressed escape and wants to exit the application.
 	if(m_Input->IsKeyDown(VK_ESCAPE))
 	{
@@ -368,7 +493,7 @@ bool SystemClass::Frame()
 	{
 	case Gamedata::GameState::MAINMENU:
 		// Do the frame processing for the graphics object.
-		result = UpdateDrawGamePlay();	
+		result = UpdateDrawGamePlay(dt);	
 		if (!result)
 		{
 			return false;

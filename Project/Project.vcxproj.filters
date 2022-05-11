@@ -155,6 +155,12 @@
     <ClInclude Include="ModelManager.h">
       <Filter>GameEngine</Filter>
     </ClInclude>
+    <ClInclude Include="GameEntity.h">
+      <Filter>GameEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Bullet.h">
+      <Filter>GameEngine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="VertexShader.hlsl">
