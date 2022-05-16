@@ -109,15 +109,20 @@ bool SystemClass::Initialize()
 void SystemClass::InitialiseObjects()
 {
 
-	m_texManager->InitialiseTexture("maptex", L"../Project/data/maptex.dds");
-	m_texManager->InitialiseTexture("weapontex", L"../Project/data/UMP_lambert1_BaseColor.dds");
-	m_texManager->InitialiseTexture("enemytex", L"../Project/data/Cyborg-Enemy_DIF.dds");
-	m_texManager->InitialiseTexture("bullettex", L"../Project/data/Metal038_1K_Color.dds");
+	m_texManager->InitialiseTexture("maptex", L"data/maptex.dds");
+	m_texManager->InitialiseTexture("weapontex", L"data/UMP_lambert1_BaseColor.dds");
+	m_texManager->InitialiseTexture("enemytex", L"data/Cyborg-Enemy_DIF.dds");
+	m_texManager->InitialiseTexture("bullettex", L"data/Metal038_1K_Color.dds");
+	m_texManager->InitialiseTexture("turrettex", L"data/Turret_lambert1_BaseColor.dds");
+	m_texManager->InitialiseTexture("cctvtex", L"data/CCTV_lambert2SG_BaseColor.dds");
 
-	m_modelManager->InitialiseModel("mapmodel", "../Project/data/map.obj");
-	m_modelManager->InitialiseModel("umpmodel", "../Project/data/UMP.obj");
-	m_modelManager->InitialiseModel("enemymodel", "../Project/data/enemymodel.obj");
-	m_modelManager->InitialiseModel("bulletmodel", "../Project/data/bulletmats.obj");
+
+	m_modelManager->InitialiseModel("mapmodel", "data/map.obj");
+	m_modelManager->InitialiseModel("umpmodel", "data/UMP.obj");
+	m_modelManager->InitialiseModel("enemymodel", "data/enemymodel.obj");
+	m_modelManager->InitialiseModel("bulletmodel", "data/bulletmats.obj");
+	m_modelManager->InitialiseModel("turretmodel", "data/Turret.obj");
+	m_modelManager->InitialiseModel("cctvmodel", "data/CCTV.obj");
 
 	GameObject* map = new GameObject;
 	map->SetName("map");
@@ -139,7 +144,7 @@ void SystemClass::InitialiseObjects()
 	gun->SetScale(0.1f, 0.1f, 0.1f);
 	m_gameObjectManager->AddGameObject(gun, gun->GetName());
 
-	////////////GameObj
+	//Enemy objects
 	GameObject* testobj = new GameObject;
 	testobj->SetName("testobj");
 	testobj->SetD3DDevice(m_Graphics->GetDevice());
@@ -155,35 +160,35 @@ void SystemClass::InitialiseObjects()
 	testobj->SetCollisionSphere(colsp);
 	m_gameObjectManager->AddGameObject(testobj, testobj->GetName());
 
-	/*GameObject* testobj2 = new GameObject;
-	testobj2->SetName("testobj2");
-	testobj2->SetD3DDevice(m_Graphics->GetDevice());
-	testobj2->SetTexture(m_texManager->GetTexture("weapontex"));
-	testobj2->SetModel(m_modelManager->GetModel("umpmodel"));
-	testobj2->SetPosition(2.5, 1, 5);
-	testobj2->SetRotation(0, 1, 2);
-	testobj2->SetScale(0.1f, 0.1f, 0.1f);
 
-	CollisionSphere* colsp2 = new CollisionSphere;
-	colsp2->UpdatePosition(testobj->GetPositionVec());
-	colsp2->SetRadius(1.0f);
-	testobj2->SetCollisionSphere(colsp2);
-	m_gameObjectManager->AddGameObject(testobj2, testobj2->GetName());*/
+	//Turret
+	GameObject* turret = new GameObject;
+	turret->SetName("turret");
+	turret->SetD3DDevice(m_Graphics->GetDevice());
+	turret->SetTexture(m_texManager->GetTexture("turrettex"));
+	turret->SetModel(m_modelManager->GetModel("turretmodel"));
+	turret->SetPosition(-27.06, 1, 0.28);
+	turret->SetRotation(0, -4.46, 0);
+	turret->SetScale(0.1f, 0.1f, 0.1f);
 
-	//Bullet* bullet = new Bullet;
-	//bullet->SetName("bullet");
-	//bullet->SetD3DDevice(m_Graphics->GetDevice());
-	//bullet->SetTexture(m_texManager->GetTexture("weapontex"));
-	//bullet->SetModel(m_modelManager->GetModel("umpmodel"));
-	//bullet->SetPosition(2.5, 1, 5);
-	//bullet->SetRotation(0, 1, 2);
-	//bullet->SetScale(0.1f, 0.1f, 0.1f);
+	CollisionSphere* turretsp = new CollisionSphere;
+	turretsp->UpdatePosition(turret->GetPositionVec());
+	turretsp->SetRadius(1.0f);
+	turret->SetCollisionSphere(turretsp);
+	m_gameObjectManager->AddGameObject(turret, turret->GetName());
 
-	//CollisionSphere* bullsp = new CollisionSphere;
-	//bullsp->UpdatePosition(bullet->GetPositionVec());
-	//bullsp->SetRadius(1.0f);
-	//bullet->SetCollisionSphere(bullsp);
-	//m_gameObjectManager->AddGameObject(bullet, bullet->GetName());
+
+	//CCTV
+	GameObject* cctv = new GameObject;
+	cctv->SetName("cctv");
+	cctv->SetD3DDevice(m_Graphics->GetDevice());
+	cctv->SetTexture(m_texManager->GetTexture("cctvtex"));
+	cctv->SetModel(m_modelManager->GetModel("cctvmodel"));
+	cctv->SetPosition(-18, 1, -22.63);
+	cctv->SetRotation(0, -5.58, 0);
+	cctv->SetScale(0.1f, 0.1f, 0.1f);
+
+	m_gameObjectManager->AddGameObject(cctv, cctv->GetName());
 
 	m_collisionEngine->SetGameObjectManager(m_gameObjectManager);
 
@@ -459,13 +464,13 @@ void CheckBulletsAlive(GameObjectManager* gObjMgr, vector<string>& bulletsArray)
 	{
 		if (gObjMgr->GetGameObject(bulletsArray.at(i)) != nullptr)
 		{
-			if (gObjMgr->GetGameObject(bulletsArray.at(i))->Alive() == false)
+			if (gObjMgr->GetGameObject(bulletsArray.at(i))->Alive() == true)
 			{
-				gObjMgr->RemoveGameObject(bulletsArray.at(i));		
+				updatedlist.push_back(bulletsArray.at(i));		
 			}
 			else
 			{
-				updatedlist.push_back(bulletsArray.at(i));
+				gObjMgr->RemoveGameObject(bulletsArray.at(i));	// remove if the bullet dead
 			}		
 		}	
 	}
@@ -505,8 +510,6 @@ bool SystemClass::UpdateDrawGamePlay(float dt)
 	}
 	if (bulletsArray.size() != 0)
 	{
-		//if bullets reach 222 units remove it
-		//RemoveBullets(m_gameObjectManager);
 		CheckBulletsAlive(m_gameObjectManager, bulletsArray);
 		UpdateBulletsPosition(m_gameObjectManager, bulletsArray);
 	}
@@ -719,7 +722,7 @@ void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
 	m_hinstance = GetModuleHandle(NULL);
 
 	// Give the application a name.
-	m_applicationName = L"Project";
+	m_applicationName = L"Shooter Game - The New Noir";
 
 	// Setup the windows class with default settings.
 	wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;

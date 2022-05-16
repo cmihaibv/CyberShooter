@@ -48,9 +48,6 @@
     <ClCompile Include="inputclass.cpp">
       <Filter>Keyboard</Filter>
     </ClCompile>
-    <ClCompile Include="mouse.cpp">
-      <Filter>Mouse</Filter>
-    </ClCompile>
     <ClCompile Include="lightshaderclass.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
@@ -112,9 +109,6 @@
     </ClInclude>
     <ClInclude Include="inputclass.h">
       <Filter>Keyboard</Filter>
-    </ClInclude>
-    <ClInclude Include="mouse.h">
-      <Filter>Mouse</Filter>
     </ClInclude>
     <ClInclude Include="lightshaderclass.h">
       <Filter>Graphics</Filter>

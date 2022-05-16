@@ -26,7 +26,6 @@
 #include "ModelManager.h"
 #include "gameobjectmanager.h"
 #include "cameraclass.h"
-#include "mouse.h"
 #include "Timer.h"
 #include "CollisionEngine.h"
 
@@ -70,7 +69,6 @@ private:
 
 	InputClass* m_Input;
 	GraphicsClass* m_Graphics;
-	MouseClass m_mouse;
 	Timer timer;
 
 	CameraClass* m_camera;
