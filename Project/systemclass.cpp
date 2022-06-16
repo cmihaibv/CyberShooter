@@ -108,7 +108,7 @@ bool SystemClass::Initialize()
 
 void SystemClass::InitialiseObjects()
 {
-
+	//Initialise Textures
 	m_texManager->InitialiseTexture("maptex", L"data/maptex.dds");
 	m_texManager->InitialiseTexture("weapontex", L"data/UMP_lambert1_BaseColor.dds");
 	m_texManager->InitialiseTexture("enemytex", L"data/Cyborg-Enemy_DIF.dds");
@@ -116,7 +116,7 @@ void SystemClass::InitialiseObjects()
 	m_texManager->InitialiseTexture("turrettex", L"data/Turret_lambert1_BaseColor.dds");
 	m_texManager->InitialiseTexture("cctvtex", L"data/CCTV_lambert2SG_BaseColor.dds");
 
-
+	// Load models
 	m_modelManager->InitialiseModel("mapmodel", "data/map.obj");
 	m_modelManager->InitialiseModel("umpmodel", "data/UMP.obj");
 	m_modelManager->InitialiseModel("enemymodel", "data/enemymodel.obj");
@@ -124,6 +124,7 @@ void SystemClass::InitialiseObjects()
 	m_modelManager->InitialiseModel("turretmodel", "data/Turret.obj");
 	m_modelManager->InitialiseModel("cctvmodel", "data/CCTV.obj");
 
+	// Create gameobjects
 	GameObject* map = new GameObject;
 	map->SetName("map");
 	map->SetD3DDevice(m_Graphics->GetDevice());
