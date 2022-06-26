@@ -92,7 +92,7 @@ bool SystemClass::Initialize()
 	m_camera->InitialiseProjection(screenWidth, screenHeight, SCREEN_NEAR, SCREEN_DEPTH);
 
 	// Set the initial position of the camera.
-	m_camera->SetPosition(0.0f, 0.0f, -3.0f);
+	m_camera->SetPosition(-30.0f, 0.0f, -30.0f);
 
 	// Send camera in Graphics
 	m_Graphics->SetCamera(m_camera);
@@ -140,7 +140,7 @@ void SystemClass::InitialiseObjects()
 	gun->SetD3DDevice(m_Graphics->GetDevice());
 	gun->SetTexture(m_texManager->GetTexture("weapontex"));
 	gun->SetModel(m_modelManager->GetModel("umpmodel"));
-	gun->SetPosition(XMVectorGetX(m_camera->GetForwardVector()), -1.0, XMVectorGetZ(m_camera->GetPosition()));
+	gun->SetPosition(XMVectorGetX(m_camera->GetPosition()), -1.0, XMVectorGetZ(m_camera->GetPosition()));
 	gun->SetRotation(XMVectorGetX(m_camera->GetRotation()), XMVectorGetY(m_camera->GetRotation()), XMVectorGetZ(m_camera->GetRotation()));
 	gun->SetScale(0.1f, 0.1f, 0.1f);
 	m_gameObjectManager->AddGameObject(gun, gun->GetName());
@@ -350,6 +350,413 @@ bool CheckNewPos(XMFLOAT3& move)
 	};
 	walkareas.push_back(walkArea);
 
+	xMin = -36;
+	xMax = -23;
+
+	zMin = -47;
+	zMax = -27;
+
+	walkArea = {
+		{ xMin, xMax},
+		{ zMin, zMax}
+	};
+	walkareas.push_back(walkArea);
+
+	xMin = -23;
+	xMax = -11;
+
+	zMin = -33;
+	zMax = -27;
+
+	walkArea = {
+		{ xMin, xMax},
+		{ zMin, zMax}
+	};
+	walkareas.push_back(walkArea);
+
+	xMin = -20;
+	xMax = -12;
+
+	zMin = -47;
+	zMax = -27;
+
+	walkArea = {
+		{ xMin, xMax},
+		{ zMin, zMax}
+	};
+	walkareas.push_back(walkArea);
+
+	xMin = -11;
+	xMax = 16;
+
+	zMin = -30;
+	zMax = -27;
+
+	walkArea = {
+		{ xMin, xMax},
+		{ zMin, zMax}
+	};
+	walkareas.push_back(walkArea);
+
+	xMin = 5;
+	xMax = 16;
+
+	zMin = -46;
+	zMax = -27;
+
+	walkArea = {
+		{ xMin, xMax},
+		{ zMin, zMax}
+	};
+	walkareas.push_back(walkArea);
+
+	xMin = -20;
+	xMax = 5;
+
+	zMin = -47;
+	zMax = -44;
+
+	walkArea = {
+		{ xMin, xMax},
+		{ zMin, zMax}
+	};
+	walkareas.push_back(walkArea);
+
+	xMin = 16;
+	xMax = 19;
+
+	zMin = -40;
+	zMax = -38.5;
+
+	walkArea = {
+		{ xMin, xMax},
+		{ zMin, zMax}
+	};
+	walkareas.push_back(walkArea);
+
+	xMin = 19;
+	xMax = 22;
+
+	zMin = -47;
+	zMax = -35;
+
+	walkArea = {
+		{ xMin, xMax},
+		{ zMin, zMax}
+	};
+	walkareas.push_back(walkArea);
+
+	xMin = 19;
+	xMax = 32;
+
+	zMin = -41;
+	zMax = -39;
+
+	walkArea = {
+		{ xMin, xMax},
+		{ zMin, zMax}
+	};
+	walkareas.push_back(walkArea);
+
+	xMin = 29;
+	xMax = 32;
+
+	zMin = -47.6;
+	zMax = -39;
+
+	walkArea = {
+		{ xMin, xMax},
+		{ zMin, zMax}
+	};
+	walkareas.push_back(walkArea);
+
+	xMin = 29;
+	xMax = 47;
+
+	zMin = -47.6;
+	zMax = -46.95;
+
+	walkArea = {
+		{ xMin, xMax},
+		{ zMin, zMax}
+	};
+	walkareas.push_back(walkArea);
+
+	xMin = 31;
+	xMax = 35;
+
+	zMin = -44;
+	zMax = -43;
+
+	walkArea = {
+		{ xMin, xMax},
+		{ zMin, zMax}
+	};
+	walkareas.push_back(walkArea);
+
+	xMin = 35;
+	xMax = 47;
+
+	zMin = -44;
+	zMax = -42;
+
+	walkArea = {
+		{ xMin, xMax},
+		{ zMin, zMax}
+	};
+	walkareas.push_back(walkArea);
+
+	xMin = 19;
+	xMax = 44;
+
+	zMin = -32;
+	zMax = -31;
+
+	walkArea = {
+		{ xMin, xMax},
+		{ zMin, zMax}
+	};
+	walkareas.push_back(walkArea);
+
+	xMin = 35;
+	xMax = 36;
+
+	zMin = -44;
+	zMax = -31;
+
+	walkArea = {
+		{ xMin, xMax},
+		{ zMin, zMax}
+	};
+	walkareas.push_back(walkArea);
+
+	xMin = 40;
+	xMax = 47;
+
+	zMin = -44;
+	zMax = -36;
+
+	walkArea = {
+		{ xMin, xMax},
+		{ zMin, zMax}
+	};
+	walkareas.push_back(walkArea);
+
+	xMin = 40;
+	xMax = 43;
+
+	zMin = -36;
+	zMax = -31;
+
+	walkArea = {
+		{ xMin, xMax},
+		{ zMin, zMax}
+	};
+	walkareas.push_back(walkArea);
+
+	xMin = 35;
+	xMax = 40;
+
+	zMin = -37.5;
+	zMax = -36;
+
+	walkArea = {
+		{ xMin, xMax},
+		{ zMin, zMax}
+	};
+	walkareas.push_back(walkArea);
+
+	xMin = 28;
+	xMax = 31;
+
+	zMin = -32;
+	zMax = -27;
+
+	walkArea = {
+		{ xMin, xMax},
+		{ zMin, zMax}
+	};
+	walkareas.push_back(walkArea);
+
+	xMin = 19;
+	xMax = 26;
+
+	zMin = -32;
+	zMax = -16;
+
+	walkArea = {
+		{ xMin, xMax},
+		{ zMin, zMax}
+	};
+	walkareas.push_back(walkArea);
+
+	xMin = 26;
+	xMax = 32;
+
+	zMin = -20.5;
+	zMax = -16;
+
+	walkArea = {
+		{ xMin, xMax},
+		{ zMin, zMax}
+	};
+	walkareas.push_back(walkArea);
+
+	xMin = 31.5;
+	xMax = 36;
+
+	zMin = -16.8;
+	zMax = -15.5;
+
+	walkArea = {
+		{ xMin, xMax},
+		{ zMin, zMax}
+	};
+	walkareas.push_back(walkArea);
+	xMin = 35;
+	xMax = 36;
+
+	zMin = -16.8;
+	zMax = -11.7;
+
+	walkArea = {
+		{ xMin, xMax},
+		{ zMin, zMax}
+	};
+	walkareas.push_back(walkArea);
+
+	xMin = 36;
+	xMax = 45;
+
+	zMin = -12.8;
+	zMax = -11.7;
+
+	walkArea = {
+		{ xMin, xMax},
+		{ zMin, zMax}
+	};
+	walkareas.push_back(walkArea);
+
+	xMin = 40;
+	xMax = 43;
+
+	zMin = -17;
+	zMax = -12.8;
+
+	walkArea = {
+		{ xMin, xMax},
+		{ zMin, zMax}
+	};
+	walkareas.push_back(walkArea);
+
+	xMin = 43;
+	xMax = 44;
+
+	zMin = -11.7;
+	zMax = -8;
+
+	walkArea = {
+		{ xMin, xMax},
+		{ zMin, zMax}
+	};
+	walkareas.push_back(walkArea);
+
+	xMin = 40;
+	xMax = 43;
+
+	zMin = -9.5;
+	zMax = 8;
+
+	walkArea = {
+		{ xMin, xMax},
+		{ zMin, zMax}
+	};
+	walkareas.push_back(walkArea);
+
+	xMin = 30;
+	xMax = 43;
+
+	zMin = 7;
+	zMax = 8;
+
+	walkArea = {
+		{ xMin, xMax},
+		{ zMin, zMax}
+	};
+	walkareas.push_back(walkArea);
+
+	xMin = 19;
+	xMax = 31;
+
+	zMin = -8;
+	zMax = 6;
+
+	walkArea = {
+		{ xMin, xMax},
+		{ zMin, zMax}
+	};
+	walkareas.push_back(walkArea);
+
+	xMin = 28;
+	xMax = 32;
+
+	zMin = 6;
+	zMax = 16;
+
+	walkArea = {
+		{ xMin, xMax},
+		{ zMin, zMax}
+	};
+	walkareas.push_back(walkArea);
+
+	xMin = 19;
+	xMax = 21;
+
+	zMin = 6;
+	zMax = 16;
+
+	walkArea = {
+		{ xMin, xMax},
+		{ zMin, zMax}
+	};
+	walkareas.push_back(walkArea);
+
+	xMin = 21;
+	xMax = 32;
+
+	zMin = 13;
+	zMax = 16;
+
+	walkArea = {
+		{ xMin, xMax},
+		{ zMin, zMax}
+	};
+	walkareas.push_back(walkArea);
+
+	xMin = 31;
+	xMax = 47;
+
+	zMin = 15;
+	zMax = 31;
+
+	walkArea = {
+		{ xMin, xMax},
+		{ zMin, zMax}
+	};
+	walkareas.push_back(walkArea);
+
+	xMin = 44;
+	xMax = 47;
+
+	zMin = 31;
+	zMax = 47;
+
+	walkArea = {
+		{ xMin, xMax},
+		{ zMin, zMax}
+	};
+	walkareas.push_back(walkArea);
+
 	for (int i = 0; i < walkareas.size();i++)
 	{
 		int a = walkareas.at(i)[0][1];
@@ -401,7 +808,7 @@ void MoveCharacter(CameraClass* camera, GameObjectManager* gamemgr,InputClass* i
 	XMFLOAT3 newGunPos = gameobj->GetPosition();
 
 	//Check new position
-	if (CheckNewPos(newGunPos) == false)
+	if (CheckNewPos(newGunPos) == false && input->IsKeyDown(0x10)==false)
 	{
 		camera->SetPosition(actualCamPos.x, actualCamPos.y, actualCamPos.z);
 		gameobj->SetPosition(actualGunPos.x, actualGunPos.y, actualGunPos.z);
@@ -519,6 +926,7 @@ bool SystemClass::UpdateDrawGamePlay(float dt)
 	//Test collision between objects
 	TestCollision(m_collisionEngine, m_gameObjectManager);
 
+
 	result = m_Graphics->Frame();
 	return result;
 }
@@ -578,133 +986,133 @@ LRESULT CALLBACK SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam
 	switch(umsg)
 	{
 		// Check if a key has been pressed on the keyboard.
-		case WM_KEYDOWN:
+	case WM_KEYDOWN:
+	{
+		// If a key is pressed send it to the input object so it can record that state.
+		m_Input->KeyDown((unsigned int)wparam);
+		return 0;
+	}
+
+	// Check if a key has been released on the keyboard.
+	case WM_KEYUP:
+	{
+		// If a key is released then send it to the input object so it can unset the state for that key.
+		m_Input->KeyUp((unsigned int)wparam);
+		return 0;
+	}
+
+	///////////
+	///////////
+	//Mouse Messages
+	case WM_LBUTTONDOWN:
+	{
+		// Capture mouse input. 
+
+		SetCapture(hwnd);
+
+		// Retrieve the screen coordinates of the client area, 
+		// and convert them into client coordinates. 
+
+		GetClientRect(hwnd, &rcClient);
+		ptClientUL.x = rcClient.left;
+		ptClientUL.y = rcClient.top;
+
+		// Add one to the right and bottom sides, because the 
+		// coordinates retrieved by GetClientRect do not 
+		// include the far left and lowermost pixels. 
+
+		ptClientLR.x = rcClient.right + 1;
+		ptClientLR.y = rcClient.bottom + 1;
+		ClientToScreen(hwnd, &ptClientUL);
+		ClientToScreen(hwnd, &ptClientLR);
+
+		// Copy the client coordinates of the client area 
+		// to the rcClient structure. Confine the mouse cursor 
+		// to the client area by passing the rcClient structure 
+		// to the ClipCursor function. 
+
+		SetRect(&rcClient, ptClientUL.x, ptClientUL.y,
+			ptClientLR.x, ptClientLR.y);
+		ClipCursor(&rcClient);
+
+		// Convert the cursor coordinates into a POINTS 
+		// structure, which defines the beginning point of the 
+		// line drawn during a WM_MOUSEMOVE message. 
+
+		ptsBegin = MAKEPOINTS(lparam);
+		return 0;
+	}
+
+	case WM_MOUSEMOVE:
+	{
+
+		// When moving the mouse, the user must hold down 
+		// the left mouse button to draw lines. 
+
+		if (wparam & MK_LBUTTON)
 		{
-			// If a key is pressed send it to the input object so it can record that state.
-			m_Input->KeyDown((unsigned int)wparam);
-			return 0;
-		}
 
-		// Check if a key has been released on the keyboard.
-		case WM_KEYUP:
-		{
-			// If a key is released then send it to the input object so it can unset the state for that key.
-			m_Input->KeyUp((unsigned int)wparam);
-			return 0;
-		}
+			// Retrieve a device context (DC) for the client area. 
 
-		///////////
-		///////////
-		//Mouse Messages
-		case WM_LBUTTONDOWN:
-		{
-			// Capture mouse input. 
+			hdc = GetDC(hwnd);
 
-			SetCapture(hwnd);
+			// The following function ensures that pixels of 
+			// the previously drawn line are set to white and 
+			// those of the new line are set to black. 
 
-			// Retrieve the screen coordinates of the client area, 
-			// and convert them into client coordinates. 
+			SetROP2(hdc, R2_NOTXORPEN);
 
-			GetClientRect(hwnd, &rcClient);
-			ptClientUL.x = rcClient.left;
-			ptClientUL.y = rcClient.top;
+			// If a line was drawn during an earlier WM_MOUSEMOVE 
+			// message, draw over it. This erases the line by 
+			// setting the color of its pixels to white. 
 
-			// Add one to the right and bottom sides, because the 
-			// coordinates retrieved by GetClientRect do not 
-			// include the far left and lowermost pixels. 
-
-			ptClientLR.x = rcClient.right + 1;
-			ptClientLR.y = rcClient.bottom + 1;
-			ClientToScreen(hwnd, &ptClientUL);
-			ClientToScreen(hwnd, &ptClientLR);
-
-			// Copy the client coordinates of the client area 
-			// to the rcClient structure. Confine the mouse cursor 
-			// to the client area by passing the rcClient structure 
-			// to the ClipCursor function. 
-
-			SetRect(&rcClient, ptClientUL.x, ptClientUL.y,
-				ptClientLR.x, ptClientLR.y);
-			ClipCursor(&rcClient);
-
-			// Convert the cursor coordinates into a POINTS 
-			// structure, which defines the beginning point of the 
-			// line drawn during a WM_MOUSEMOVE message. 
-
-			ptsBegin = MAKEPOINTS(lparam);
-			return 0;
-		}
-
-		case WM_MOUSEMOVE:
-		{
-
-			// When moving the mouse, the user must hold down 
-			// the left mouse button to draw lines. 
-
-			if (wparam & MK_LBUTTON)
+			if (fPrevLine)
 			{
-
-				// Retrieve a device context (DC) for the client area. 
-
-				hdc = GetDC(hwnd);
-
-				// The following function ensures that pixels of 
-				// the previously drawn line are set to white and 
-				// those of the new line are set to black. 
-
-				SetROP2(hdc, R2_NOTXORPEN);
-
-				// If a line was drawn during an earlier WM_MOUSEMOVE 
-				// message, draw over it. This erases the line by 
-				// setting the color of its pixels to white. 
-
-				if (fPrevLine)
-				{
-					MoveToEx(hdc, ptsBegin.x, ptsBegin.y,
-						(LPPOINT)NULL);
-					LineTo(hdc, ptsPrevEnd.x, ptsPrevEnd.y);
-				}
-
-				// Convert the current cursor coordinates to a 
-				// POINTS structure, and then draw a new line. 
-
-				ptsEnd = MAKEPOINTS(lparam);
-				MoveToEx(hdc, ptsBegin.x, ptsBegin.y, (LPPOINT)NULL);
-				LineTo(hdc, ptsEnd.x, ptsEnd.y);
-
-				// Set the previous line flag, save the ending 
-				// point of the new line, and then release the DC. 
-
-				fPrevLine = TRUE;
-				ptsPrevEnd = ptsEnd;
-				ReleaseDC(hwnd, hdc);
+				MoveToEx(hdc, ptsBegin.x, ptsBegin.y,
+					(LPPOINT)NULL);
+				LineTo(hdc, ptsPrevEnd.x, ptsPrevEnd.y);
 			}
-			break;
 
-		}
+			// Convert the current cursor coordinates to a 
+			// POINTS structure, and then draw a new line. 
 
-		case WM_LBUTTONUP:
-		{
-			// The user has finished drawing the line. Reset the 
-			// previous line flag, release the mouse cursor, and 
-			// release the mouse capture. 
+			ptsEnd = MAKEPOINTS(lparam);
+			MoveToEx(hdc, ptsBegin.x, ptsBegin.y, (LPPOINT)NULL);
+			LineTo(hdc, ptsEnd.x, ptsEnd.y);
 
-			fPrevLine = FALSE;
-			ClipCursor(NULL);
-			ReleaseCapture();
-			return 0;
+			// Set the previous line flag, save the ending 
+			// point of the new line, and then release the DC. 
+
+			fPrevLine = TRUE;
+			ptsPrevEnd = ptsEnd;
+			ReleaseDC(hwnd, hdc);
 		}
-		case WM_DESTROY: 
-		{
-			PostQuitMessage(0);
-			break;
-		}
-			
-		// Any other messages send to the default message handler as our application won't make use of them.
-		default:
-		{
-			return DefWindowProc(hwnd, umsg, wparam, lparam);
-		}
+		break;
+
+	}
+
+	case WM_LBUTTONUP:
+	{
+		// The user has finished drawing the line. Reset the 
+		// previous line flag, release the mouse cursor, and 
+		// release the mouse capture. 
+
+		fPrevLine = FALSE;
+		ClipCursor(NULL);
+		ReleaseCapture();
+		return 0;
+	}
+	case WM_DESTROY:
+	{
+		PostQuitMessage(0);
+		break;
+	}
+
+	// Any other messages send to the default message handler as our application won't make use of them.
+	default:
+	{
+		return DefWindowProc(hwnd, umsg, wparam, lparam);
+	}
 	}
 }
 
