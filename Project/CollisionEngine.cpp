@@ -53,14 +53,26 @@ std::vector<std::string> CollisionEngine::TestCollision()
 		//get the next GameObject the obj manager
 		for (int j = i + 1; j < gameobjects.size(); j++)
 		{
-			float distance = CalculateDistance(gameobjects[i]->GetPositionVec(), gameobjects[j]->GetPositionVec());
-
-			if (distance < gameobjects[i]->GetCollisionSphere()->GetRadius() || distance < gameobjects[j]->GetCollisionSphere()->GetRadius())
+			bool skip = true;
+			for (int x=0; x<gameobjects[i]->GetCollidable().size();x++)
 			{
-				 names.push_back(gameobjects[i]->GetName());
-				 names.push_back(gameobjects[j]->GetName());
+				string tag= gameobjects[i]->GetCollidable()[x];
+				if (tag == gameobjects[j]->m_tag)
+				{
+					skip = false;
+				}
+			}
+			if (skip == false)
+			{
+				float distance = CalculateDistance(gameobjects[i]->GetPositionVec(), gameobjects[j]->GetPositionVec());
 
-				 return names;
+				if (distance < gameobjects[i]->GetCollisionSphere()->GetRadius() || distance < gameobjects[j]->GetCollisionSphere()->GetRadius())
+				{
+					names.push_back(gameobjects[i]->GetName());
+					names.push_back(gameobjects[j]->GetName());
+
+					return names;
+				}
 			}
 		}
 	}

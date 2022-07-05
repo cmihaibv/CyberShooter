@@ -137,6 +137,7 @@ void SystemClass::InitialiseObjects()
 	
 	GameObject* gun = new GameObject;
 	gun->SetName("gun");
+	gun->SetTag("player");
 	gun->SetD3DDevice(m_Graphics->GetDevice());
 	gun->SetTexture(m_texManager->GetTexture("weapontex"));
 	gun->SetModel(m_modelManager->GetModel("umpmodel"));
@@ -148,6 +149,7 @@ void SystemClass::InitialiseObjects()
 	//Enemy objects
 	GameObject* testobj = new GameObject;
 	testobj->SetName("testobj");
+	testobj->SetTag("enemy");
 	testobj->SetD3DDevice(m_Graphics->GetDevice());
 	testobj->SetTexture(m_texManager->GetTexture("enemytex"));
 	testobj->SetModel(m_modelManager->GetModel("enemymodel"));
@@ -851,6 +853,10 @@ void Shoot(GameObjectManager* gObjMgr,ModelManager* mMgr,TextureManager* texMgr,
 	string name = "bull" + std::to_string(gObjMgr->GetGameObjects().size()) + std::to_string(std::rand() % 100 + 1);		//random name
 	bulletsArray.push_back(name);
 	bullet->SetName(name);
+	bullet->SetTag("bullet");
+	bullet->AddCollidable("bullet");
+	bullet->AddCollidable("enemy");
+	bullet->AddCollidable("player");
 	bullet->SetD3DDevice(graphics->GetDevice());
 	bullet->SetTexture(texMgr->GetTexture("bullettex"));
 	bullet->SetModel(mMgr->GetModel("bulletmodel"));

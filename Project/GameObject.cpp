@@ -174,6 +174,9 @@ void GameObject::UpdateCollision()
 }
 void GameObject::Action()
 {
+}
+void GameObject::Action(GameObject& gobj)
+{
 
 }
 bool GameObject::Alive()
@@ -183,5 +186,20 @@ bool GameObject::Alive()
 void GameObject::ReleaseObject()
 {
 
+}
+
+void GameObject::SetTag(string tag)
+{
+	m_tag = tag;
+}
+
+void GameObject::AddCollidable(string tag)
+{
+	collideList.push_back(tag);
+}
+
+vector<string> GameObject::GetCollidable()
+{
+	return collideList;
 }
 

@@ -59,12 +59,29 @@ public:
 	void UpdateCollision();
 
 	virtual void Action();
+	virtual void Action(GameObject& gobj);
 	virtual bool Alive();
 
 	void ReleaseObject();
 
+	/// <summary>
+	/// Set a tag for this object.
+	/// </summary>
+	/// <param name="tag"></param>
+	void SetTag(string tag);
+	/// <summary>
+	/// Add tags of the objects this object can collide with.
+	/// </summary>
+	void AddCollidable(string tag);
+	/// <summary>
+	/// Get the list of tags of objects this object can collide with .
+	/// </summary>
+	/// <returns></returns>
+	vector<string> GetCollidable();
+
 	TextureClass* m_texture;
 	ModelClass* m_model;
+	string m_tag;
 protected:
 
 	ID3D11Device* m_device;					// d3d handle to read & write
@@ -93,6 +110,7 @@ protected:
 	const XMVECTOR m_DefaultLeftVec = XMVectorSet(-1.0f, 0.0f, 0.0f, 0.0f);		//
 	const XMVECTOR m_DefaultRightVec = XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f);		//
 	string m_name;
+	vector<string> collideList;
 	CollisionSphere* m_collisionsphere = nullptr;
 };
 
