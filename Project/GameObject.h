@@ -16,6 +16,14 @@ using namespace DirectX;
 
 #include "textureclass.h"
 
+
+enum class State
+{
+	PATROL,
+	CHASE,
+	SHOOT
+};
+
 class GameObject
 {
 public:
@@ -60,7 +68,10 @@ public:
 
 	virtual void Action();
 	virtual void Action(GameObject& gobj);
+	virtual void Action(GameObject* gobj);
 	virtual bool Alive();
+	virtual State GetState();
+
 
 	void ReleaseObject();
 
@@ -112,6 +123,7 @@ protected:
 	string m_name;
 	vector<string> collideList;
 	CollisionSphere* m_collisionsphere = nullptr;
+	State m_state;
 };
 
 #endif

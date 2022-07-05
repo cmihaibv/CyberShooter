@@ -100,14 +100,16 @@ void GameObject::UpdatePosition(XMVECTOR& pos)
 
 void GameObject::UpdateRotation(XMVECTOR& rot)
 {
-	m_rotVec = rot;
+	
+	m_rotVec += rot;
+	XMStoreFloat3(&m_rotation, m_rotVec);
 	UpdateModelMatrix();
 }
 
 void GameObject::UpdateModelMatrix()
 {
 	// Translate and rotate the model
-	this->m_modelView = XMMatrixRotationRollPitchYaw(this->m_rotation.x, this->m_rotation.y, this->m_rotation.z) * XMMatrixScaling(m_scale.x, m_scale.y, m_scale.z) * XMMatrixTranslation(this->m_position.x, this->m_position.y, this->m_position.z) ;
+	this->m_modelView = XMMatrixScaling(m_scale.x, m_scale.y, m_scale.z) * XMMatrixRotationRollPitchYaw(0, this->m_rotation.y, 0) * XMMatrixTranslation(this->m_position.x, this->m_position.y, this->m_position.z) ;
 
 	XMMATRIX vecRotationMatrix = XMMatrixRotationRollPitchYaw(0.0f, this->m_rotation.y, 0.0f);
 
@@ -179,9 +181,16 @@ void GameObject::Action(GameObject& gobj)
 {
 
 }
+void GameObject::Action(GameObject* gobj)
+{
+}
 bool GameObject::Alive()
 {
 	return true;
+}
+State GameObject::GetState()
+{
+	return m_state;
 }
 void GameObject::ReleaseObject()
 {
@@ -202,4 +211,3 @@ vector<string> GameObject::GetCollidable()
 {
 	return collideList;
 }
-

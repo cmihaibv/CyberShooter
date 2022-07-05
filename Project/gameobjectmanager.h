@@ -9,7 +9,7 @@
 #include "GameObject.h"
 #include "GameEntity.h"
 #include "Bullet.h"
-
+#include "Enemy.h"
 
 class GameObjectManager {
 public:
