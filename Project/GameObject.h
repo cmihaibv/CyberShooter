@@ -93,6 +93,8 @@ public:
 	TextureClass* m_texture;
 	ModelClass* m_model;
 	string m_tag;
+
+	int health;
 protected:
 
 	ID3D11Device* m_device;					// d3d handle to read & write

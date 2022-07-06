@@ -25,7 +25,6 @@ private:
 	float m_detectionDistance=15.0f;
 	float m_attackDistance=10.0f;
 	GameObject* m_target;
-	float m_dt;
 };
 
 #endif

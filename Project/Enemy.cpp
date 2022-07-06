@@ -25,7 +25,10 @@ void Enemy::Action()
 	newVecForward = XMVector3Normalize(newVecForward);
 	if (!XMVector3Equal(m_vecForward,newVecForward))
 	{
-		XMVECTOR rot = XMVector3AngleBetweenVectors(m_vecForward, newVecForward);
+		XMVECTOR rot = XMVector3AngleBetweenVectors(m_DefaultForwardVec, newVecForward);
+		if ((XMVectorGetX(newVecForward) < 0 && XMVectorGetZ(newVecForward) < 0) || XMVectorGetX(newVecForward) < 0)
+			rot = XMVectorSet(6.28319-XMVectorGetX(rot), 6.28319- XMVectorGetY(rot), 6.28319- XMVectorGetZ(rot), 6.28319- XMVectorGetW(rot));
+
 		this->UpdateRotation(rot);
 		m_vecForward = newVecForward;
 	}

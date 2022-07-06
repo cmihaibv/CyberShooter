@@ -101,7 +101,7 @@ void GameObject::UpdatePosition(XMVECTOR& pos)
 void GameObject::UpdateRotation(XMVECTOR& rot)
 {
 	
-	m_rotVec += rot;
+	m_rotVec = rot;
 	XMStoreFloat3(&m_rotation, m_rotVec);
 	UpdateModelMatrix();
 }

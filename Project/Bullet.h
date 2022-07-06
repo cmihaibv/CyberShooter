@@ -21,7 +21,7 @@ public:
 	void Action() override
 	{
 		//MoveForward
-		XMVECTOR move = GetForwardVector() * 0.45f;
+		XMVECTOR move = GetForwardVector() * 0.15f;
 
 		distanceCount += 1;
 		UpdatePosition(move);
