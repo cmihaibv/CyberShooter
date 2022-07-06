@@ -22,11 +22,24 @@
 ///////////////////////
 #include "inputclass.h"
 #include "graphicsclass.h"
+#include "TextureManager.h"
+#include "ModelManager.h"
+#include "gameobjectmanager.h"
+#include "cameraclass.h"
+#include "Timer.h"
+#include "CollisionEngine.h"
+
 
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: SystemClass
 ////////////////////////////////////////////////////////////////////////////////
+struct Gamedata
+{
+	enum GameState { MAINMENU, PLAY, LOST, SCORES, WON };
+};
+
+
 class SystemClass
 {
 public:
@@ -35,8 +48,13 @@ public:
 	~SystemClass();
 
 	bool Initialize();
+	void InitialiseObjects();
+
 	void Shutdown();
 	void Run();
+
+	bool UpdateDrawGamePlay(float);
+
 
 	LRESULT CALLBACK MessageHandler(HWND, UINT, WPARAM, LPARAM);
 
@@ -45,19 +63,31 @@ private:
 	void InitializeWindows(int&, int&);
 	void ShutdownWindows();
 
-private:
 	LPCWSTR m_applicationName;
 	HINSTANCE m_hinstance;
 	HWND m_hwnd;
 
 	InputClass* m_Input;
 	GraphicsClass* m_Graphics;
+	Timer timer;
+
+	CameraClass* m_camera;
+	TextureManager* m_texManager;
+	ModelManager* m_modelManager;
+	GameObjectManager* m_gameObjectManager;
+	CollisionEngine* m_collisionEngine;
+
+	Gamedata::GameState mode = Gamedata::GameState::MAINMENU;
+
+
+	std::vector<string> bulletsArray;
+	float shootTimer;
+	float chaseTimer;
+	float shootTimerenemy;
 };
 
 
-/////////////////////////
-// FUNCTION PROTOTYPES //
-/////////////////////////
+
 static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
 

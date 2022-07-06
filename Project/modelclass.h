@@ -2,6 +2,9 @@
 #define _MODELCLASS_H_
 
 
+//////////////
+// INCLUDES //
+//////////////
 #include <d3d11.h>
 #include <DirectXMath.h>
 #include <fstream>
@@ -16,18 +19,18 @@ using namespace DirectX;
 class ModelClass
 {
 private:
-	struct VertexType
+	struct DXVertexType
 	{
 		XMFLOAT3 position;
 		XMFLOAT2 texture;
 		XMFLOAT3 normal;
 	};
 
-	struct ModelType
+	struct NormalVertex
 	{
 		float x, y, z;
-		float tu, tv;
-		float nx, ny, nz;
+		float tu = 0, tv = 0;
+		float nx = 0, ny = 0, nz = 0;
 	};
 
 public:
@@ -36,8 +39,8 @@ public:
 	ModelClass(const ModelClass&);
 	~ModelClass();
 
-	bool Initialize(ID3D11Device*, const char*, const WCHAR*,TextureClass*);
-	
+	bool Initialize(ID3D11Device*, const char*);
+
 	void Shutdown();
 	void Render(ID3D11DeviceContext*);
 
@@ -48,21 +51,20 @@ public:
 
 private:
 	bool InitializeBuffers(ID3D11Device*);
+	bool VertexBufferDesc(ID3D11Device*, int, DXVertexType*);
+	bool IndexBufferDesc(ID3D11Device*, int, unsigned long*);
 	void ShutdownBuffers();
 	void RenderBuffers(ID3D11DeviceContext*);
 
-	bool LoadTexture(ID3D11Device*,const WCHAR*);
-	void ReleaseTexture();
 
-	bool LoadModel(const char*);
 	bool LoadObj(const char*);
 	void ReleaseModel();
 
 private:
-	ID3D11Buffer *m_vertexBuffer, *m_indexBuffer;
+	ID3D11Buffer* m_vertexBuffer, * m_indexBuffer;
 	int m_vertexCount, m_indexCount;
 	TextureClass* m_Texture;
-	ModelType* m_model;
+	std::vector<NormalVertex> m_model;
 };
 
 #endif

@@ -1,6 +1,3 @@
-////////////////////////////////////////////////////////////////////////////////
-// Filename: lightshaderclass.h
-////////////////////////////////////////////////////////////////////////////////
 #ifndef _LIGHTSHADERCLASS_H_
 #define _LIGHTSHADERCLASS_H_
 
@@ -12,12 +9,10 @@
 #include <DirectXMath.h>
 #include <d3dcompiler.h>
 #include <fstream>
+
 using namespace std;
 using namespace DirectX;
 
-////////////////////////////////////////////////////////////////////////////////
-// Class name: LightShaderClass
-////////////////////////////////////////////////////////////////////////////////
 class LightShaderClass
 {
 private:
@@ -52,7 +47,6 @@ private:
 	bool SetShaderParameters(ID3D11DeviceContext*, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*, XMVECTOR, XMVECTOR);
 	void RenderShader(ID3D11DeviceContext*, int);
 
-private:
 	ID3D11VertexShader* m_vertexShader;
 	ID3D11PixelShader* m_pixelShader;
 	ID3D11InputLayout* m_layout;

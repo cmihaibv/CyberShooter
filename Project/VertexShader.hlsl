@@ -44,15 +44,19 @@ PixelInputType LightVertexShader(VertexInputType input)
     input.position.w = 1.0f;
 
 	// Calculate the position of the vertex against the world, view, and projection matrices.
-    output.position = mul(input.position, worldMatrix);
-    output.position = mul(output.position, viewMatrix);
-    output.position = mul(output.position, projectionMatrix);
+    output.position = mul( input.position,worldMatrix);
+    
+    // calculate the viewProjection
+    float4x4 viewProj = mul(viewMatrix, projectionMatrix);
+    
+    //calculate the WVP
+    output.position = mul(output.position, viewProj);
     
 	// Store the texture coordinates for the pixel shader.
     output.tex = input.tex;
     
 	// Calculate the normal vector against the world matrix only.
-    output.normal = mul(input.normal, (float3x3) worldMatrix);
+    output.normal = mul(float4(input.normal, 0.0f), worldMatrix);
 	
     // Normalize the normal vector.
     output.normal = normalize(output.normal);
