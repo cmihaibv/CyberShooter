@@ -11,6 +11,8 @@ GameObject::GameObject()
 	m_vecLeft = XMVectorReplicateInt(0);
 	m_vecRight = XMVectorReplicateInt(0);
 	m_vecBackward = XMVectorReplicateInt(0);
+	m_health = 1;
+	m_damage = -1;
 
 
 }
@@ -186,11 +188,22 @@ void GameObject::Action(GameObject* gobj)
 }
 bool GameObject::Alive()
 {
-	return true;
+	if (m_health > 0)
+		return true;
+	else
+		return false;
 }
 State GameObject::GetState()
 {
 	return m_state;
+}
+void GameObject::SetDamage(int damage)
+{
+	m_damage = -damage;
+}
+void GameObject::SetShootSpeed(float shootspeed)
+{
+	m_shootSpeed = shootspeed;
 }
 void GameObject::ReleaseObject()
 {

@@ -150,10 +150,11 @@ void SystemClass::InitialiseObjects()
 	gun->SetPosition(XMVectorGetX(m_camera->GetPosition()), -1.0, XMVectorGetZ(m_camera->GetPosition()));
 	gun->SetRotation(XMVectorGetX(m_camera->GetRotation()), XMVectorGetY(m_camera->GetRotation()), XMVectorGetZ(m_camera->GetRotation()));
 	gun->SetScale(0.1f, 0.1f, 0.1f);
+	gun->m_health = 200;
 
 	CollisionSphere* guncoll = new CollisionSphere;
 	guncoll->UpdatePosition(gun->GetPositionVec());
-	guncoll->SetRadius(3.0f);
+	guncoll->SetRadius(0.5f);
 	gun->SetCollisionSphere(guncoll);
 	m_gameObjectManager->AddGameObject(gun, gun->GetName());
 
@@ -176,22 +177,64 @@ void SystemClass::InitialiseObjects()
 
 
 	//Enemy objects
-	Enemy* enemyai = new Enemy;
-	enemyai->SetName("enemyAI");
-	enemyai->SetTag("enemy");
-	enemyai->AddCollidable("pbullet");
-	enemyai->SetD3DDevice(m_Graphics->GetDevice());
-	enemyai->SetTexture(m_texManager->GetTexture("enemytex"));
-	enemyai->SetModel(m_modelManager->GetModel("enemymodel"));
-	enemyai->SetPosition(7, -3.5, 5);
-	enemyai->SetRotation(0, 0.5, 0);
-	enemyai->SetScale(5.0f, 5.0f, 5.0f);
+	Enemy* enemyai1 = new Enemy;
+	enemyai1->SetName("enemy1");
+	enemyai1->SetTag("enemy");
+	enemyai1->AddCollidable("pbullet");
+	enemyai1->SetD3DDevice(m_Graphics->GetDevice());
+	enemyai1->SetTexture(m_texManager->GetTexture("enemytex"));
+	enemyai1->SetModel(m_modelManager->GetModel("enemymodel"));
+	enemyai1->SetPosition(7, -3.5, 5);
+	enemyai1->SetRotation(0, 0.5, 0);
+	enemyai1->SetScale(5.0f, 5.0f, 5.0f);
+	enemyai1->m_health = 100;
+	enemyai1->SetShootSpeed(1500);
 
-	CollisionSphere* enemysp = new CollisionSphere;
-	enemysp->UpdatePosition(enemyai->GetPositionVec());
-	enemysp->SetRadius(3.0f);
-	enemyai->SetCollisionSphere(enemysp);
-	m_gameObjectManager->AddGameObject(enemyai, enemyai->GetName());
+	CollisionSphere* enemysp1 = new CollisionSphere;
+	enemysp1->UpdatePosition(enemyai1->GetPositionVec());
+	enemysp1->SetRadius(3.0f);
+	enemyai1->SetCollisionSphere(enemysp1);
+	m_gameObjectManager->AddGameObject(enemyai1, enemyai1->GetName());
+
+	Enemy* enemyai2 = new Enemy;
+	enemyai2->SetName("enemy2");
+	enemyai2->SetTag("enemy");
+	enemyai2->AddCollidable("pbullet");
+	enemyai2->SetD3DDevice(m_Graphics->GetDevice());
+	enemyai2->SetTexture(m_texManager->GetTexture("enemytex"));
+	enemyai2->SetModel(m_modelManager->GetModel("enemymodel"));
+	enemyai2->SetPosition(-10, -3.5, -5);
+	enemyai2->SetRotation(0, 0.5, 0);
+	enemyai2->SetScale(5.0f, 5.0f, 5.0f);
+	enemyai2->m_health = 100;
+	enemyai2->SetShootSpeed(1500);
+
+	CollisionSphere* enemysp2 = new CollisionSphere;
+	enemysp2->UpdatePosition(enemyai2->GetPositionVec());
+	enemysp2->SetRadius(3.0f);
+	enemyai2->SetCollisionSphere(enemysp2);
+	m_gameObjectManager->AddGameObject(enemyai2, enemyai2->GetName());
+
+	Enemy* enemyai3 = new Enemy;
+	enemyai3->SetName("enemy3");
+	enemyai3->SetTag("enemy");
+	enemyai3->AddCollidable("pbullet");
+	enemyai3->SetD3DDevice(m_Graphics->GetDevice());
+	enemyai3->SetTexture(m_texManager->GetTexture("enemytex"));
+	enemyai3->SetModel(m_modelManager->GetModel("enemymodel"));
+	enemyai3->SetPosition(-7, -3.5, 5);
+	enemyai3->SetRotation(0, 0.5, 0);
+	enemyai3->SetScale(5.0f, 5.0f, 5.0f);
+	enemyai3->m_health = 100;
+	enemyai3->SetShootSpeed(1500);
+
+	CollisionSphere* enemysp3 = new CollisionSphere;
+	enemysp3->UpdatePosition(enemyai3->GetPositionVec());
+	enemysp3->SetRadius(3.0f);
+	enemyai3->SetCollisionSphere(enemysp3);
+	m_gameObjectManager->AddGameObject(enemyai3, enemyai3->GetName());
+
+	enemyArray = { enemyai1->GetName() ,enemyai2->GetName() ,enemyai3->GetName() };
 
 
 
@@ -886,16 +929,27 @@ void TestCollision(CollisionEngine* collEngptr,GameObjectManager* gObjMgr)
 {
 	std::vector<string> collObjNames = collEngptr->TestCollision();
 
+	std::string obj1;
+	std::string obj2;
 	if (collObjNames.size() != 0)
 	{
 		for (int i = 0;i < collObjNames.size();i++)
 		{
-			std::string name = collObjNames[i];
+			obj1 = collObjNames[i];
+			obj2 = collObjNames[(i+1)%2];
 			if (collObjNames.size() > 0)
 			{
-				//gObjMgr->RemoveGameObject(name);d
-				return;
+				gObjMgr->GetGameObject(obj1)->m_health += gObjMgr->GetGameObject(obj2)->m_damage;
 			}
+
+		}
+		if (gObjMgr->GetGameObject(obj1)->m_health < 0 || gObjMgr->GetGameObject(obj1)->m_health == 0)
+		{
+			gObjMgr->RemoveGameObject(obj1);
+		}
+		else if (gObjMgr->GetGameObject(obj2)->m_health < 0 || gObjMgr->GetGameObject(obj2)->m_health == 0)
+		{
+			gObjMgr->RemoveGameObject(obj2);
 		}
 	}
 }
@@ -909,7 +963,7 @@ void Shoot(GameObject* obj,GameObjectManager* gObjMgr,ModelManager* mMgr,Texture
 	bullet->SetName(name);
 	bullet->AddCollidable("ebullet");
 	bullet->AddCollidable("pbullet");
-	if (obj->m_tag == "player")
+	if (obj->m_tag == "player" || obj->m_tag=="turret")
 	{
 		bullet->AddCollidable("enemy");
 		bullet->SetTag("pbullet");
@@ -926,7 +980,8 @@ void Shoot(GameObject* obj,GameObjectManager* gObjMgr,ModelManager* mMgr,Texture
 		bullet->SetScale(0.5f, 0.5f, 0.5f);
 	}
 	bullet->SetD3DDevice(graphics->GetDevice());
-	
+	bullet->m_health = 1;
+	bullet->SetDamage(15);
 	bullet->SetPosition(obj->GetPosition().x , -1.0, obj->GetPosition().z);// under work
 	bullet->SetRotation(XMVectorGetX(obj->GetRotation()), XMVectorGetY(obj->GetRotation()), XMVectorGetZ(obj->GetRotation()));
 	
@@ -934,7 +989,7 @@ void Shoot(GameObject* obj,GameObjectManager* gObjMgr,ModelManager* mMgr,Texture
 
 	CollisionSphere* bullsp = new CollisionSphere;
 	bullsp->UpdatePosition(bullet->GetPositionVec());
-	bullsp->SetRadius(1.0f);
+	bullsp->SetRadius(0.5f);
 	bullet->SetCollisionSphere(bullsp);
 	gObjMgr->AddGameObject(bullet, bullet->GetName());
 }
@@ -986,7 +1041,7 @@ bool SystemClass::UpdateDrawGamePlay(float dt)
 
 	for (auto it: m_gameObjectManager->GetGameObjects())
 	{
-		if (!it.second->Alive())
+		if (it.second->Alive()==false)
 		{
 			m_gameObjectManager->RemoveGameObject(it.first);
 		}
@@ -1007,25 +1062,44 @@ bool SystemClass::UpdateDrawGamePlay(float dt)
 	}
 	if (bulletsArray.size() != 0)
 	{
-		//CheckBulletsAlive(m_gameObjectManager, bulletsArray);
+		CheckBulletsAlive(m_gameObjectManager, bulletsArray);
 		UpdateBulletsPosition(m_gameObjectManager, bulletsArray);
 	}
 	
-	//Chase player
-	chaseTimer += dt;
-	
-	if (chaseTimer > 20.0)
+	//Enemy AI management
+	// 
+	//Check which enemyes are still alive
+	vector<std::string> temp;
+	for (int i = 0; i < enemyArray.size(); i++)
 	{
-		m_gameObjectManager->GetGameObject("enemyAI")->Action(m_gameObjectManager->GetGameObject("gun"));
-		shootTimerenemy += dt;
-		if (State::SHOOT == m_gameObjectManager->GetGameObject("enemyAI")->GetState() && shootTimerenemy >1500.0f)
+		if (m_gameObjectManager->GetGameObject(enemyArray[i]) != nullptr)
 		{
-			GameObject* obj = m_gameObjectManager->GetGameObject("enemyAI");
-			Shoot(obj,m_gameObjectManager, m_modelManager, m_texManager, m_Graphics, bulletsArray);
-			shootTimerenemy = 0;
+			temp.push_back(enemyArray[i]);
 		}
-		chaseTimer = 0;
 	}
+	enemyArray = temp;
+	
+	for (int i = 0;i < enemyArray.size();i++)
+	{
+		chaseTimer += dt;
+		m_gameObjectManager->GetGameObject(enemyArray[i])->m_shootTimer += dt;
+		// check if enough time passed since last time he advanced towards the player
+		if (chaseTimer > 20.0)
+		{
+			m_gameObjectManager->GetGameObject(enemyArray[i])->Action(m_gameObjectManager->GetGameObject("gun"));
+			
+			//check if enough time passed since last time he shoot
+			if (State::SHOOT == m_gameObjectManager->GetGameObject(enemyArray[i])->GetState() && m_gameObjectManager->GetGameObject(enemyArray[i])->m_shootTimer > m_gameObjectManager->GetGameObject(enemyArray[i])->m_shootSpeed)
+			{
+				GameObject* obj = m_gameObjectManager->GetGameObject(enemyArray[i]);
+				Shoot(obj, m_gameObjectManager, m_modelManager, m_texManager, m_Graphics, bulletsArray);
+				m_gameObjectManager->GetGameObject(enemyArray[i])->m_shootTimer = 0;
+				
+			}
+			chaseTimer = 0;
+		}
+	}
+
 	
 
 	//Test collision between objects

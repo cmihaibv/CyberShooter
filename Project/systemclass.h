@@ -81,9 +81,9 @@ private:
 
 
 	std::vector<string> bulletsArray;
+	std::vector<string> enemyArray;
 	float shootTimer;
 	float chaseTimer;
-	float shootTimerenemy;
 };
 
 

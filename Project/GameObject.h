@@ -71,6 +71,8 @@ public:
 	virtual void Action(GameObject* gobj);
 	virtual bool Alive();
 	virtual State GetState();
+	void SetDamage(int damage);
+	void SetShootSpeed(float shootspeed);
 
 
 	void ReleaseObject();
@@ -94,7 +96,10 @@ public:
 	ModelClass* m_model;
 	string m_tag;
 
-	int health;
+	int m_health;
+	int m_damage;
+	float m_shootSpeed;
+	float m_shootTimer;
 protected:
 
 	ID3D11Device* m_device;					// d3d handle to read & write
