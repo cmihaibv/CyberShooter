@@ -60,20 +60,21 @@ std::vector<std::string> CollisionEngine::TestCollision()
 				if (tag == gameobjects[j]->m_tag)
 				{
 					skip = false;
+					if (skip == false)
+					{
+						float distance = CalculateDistance(gameobjects[i]->GetPositionVec(), gameobjects[j]->GetPositionVec());
+
+						if (distance < gameobjects[i]->GetCollisionSphere()->GetRadius() || distance < gameobjects[j]->GetCollisionSphere()->GetRadius())
+						{
+							names.push_back(gameobjects[i]->GetName());
+							names.push_back(gameobjects[j]->GetName());
+
+							return names;
+						}
+					}
 				}
 			}
-			if (skip == false)
-			{
-				float distance = CalculateDistance(gameobjects[i]->GetPositionVec(), gameobjects[j]->GetPositionVec());
-
-				if (distance < gameobjects[i]->GetCollisionSphere()->GetRadius() || distance < gameobjects[j]->GetCollisionSphere()->GetRadius())
-				{
-					names.push_back(gameobjects[i]->GetName());
-					names.push_back(gameobjects[j]->GetName());
-
-					return names;
-				}
-			}
+			
 		}
 	}
 	return names;

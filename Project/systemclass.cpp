@@ -1,5 +1,6 @@
 #include "systemclass.h"
 #include "Bullet.h"
+#include "Enemy.h"
 
 SystemClass::SystemClass()
 {
@@ -115,6 +116,9 @@ void SystemClass::InitialiseObjects()
 	m_texManager->InitialiseTexture("bullettex", L"data/Metal038_1K_Color.dds");
 	m_texManager->InitialiseTexture("turrettex", L"data/Turret_lambert1_BaseColor.dds");
 	m_texManager->InitialiseTexture("cctvtex", L"data/CCTV_lambert2SG_BaseColor.dds");
+	m_texManager->InitialiseTexture("fireballtex", L"data/Lava005_2K_Color.dds");
+	
+
 
 	// Load models
 	m_modelManager->InitialiseModel("mapmodel", "data/map.obj");
@@ -123,6 +127,7 @@ void SystemClass::InitialiseObjects()
 	m_modelManager->InitialiseModel("bulletmodel", "data/bulletmats.obj");
 	m_modelManager->InitialiseModel("turretmodel", "data/Turret.obj");
 	m_modelManager->InitialiseModel("cctvmodel", "data/CCTV.obj");
+	m_modelManager->InitialiseModel("fireballmodel", "data/fireball.obj");
 
 	// Create gameobjects
 	GameObject* map = new GameObject;
@@ -138,12 +143,18 @@ void SystemClass::InitialiseObjects()
 	GameObject* gun = new GameObject;
 	gun->SetName("gun");
 	gun->SetTag("player");
+	gun->AddCollidable("ebullet");
 	gun->SetD3DDevice(m_Graphics->GetDevice());
 	gun->SetTexture(m_texManager->GetTexture("weapontex"));
 	gun->SetModel(m_modelManager->GetModel("umpmodel"));
 	gun->SetPosition(XMVectorGetX(m_camera->GetPosition()), -1.0, XMVectorGetZ(m_camera->GetPosition()));
 	gun->SetRotation(XMVectorGetX(m_camera->GetRotation()), XMVectorGetY(m_camera->GetRotation()), XMVectorGetZ(m_camera->GetRotation()));
 	gun->SetScale(0.1f, 0.1f, 0.1f);
+
+	CollisionSphere* guncoll = new CollisionSphere;
+	guncoll->UpdatePosition(gun->GetPositionVec());
+	guncoll->SetRadius(3.0f);
+	gun->SetCollisionSphere(guncoll);
 	m_gameObjectManager->AddGameObject(gun, gun->GetName());
 
 	//Enemy objects
@@ -162,6 +173,26 @@ void SystemClass::InitialiseObjects()
 	colsp->SetRadius(3.0f);
 	testobj->SetCollisionSphere(colsp);
 	m_gameObjectManager->AddGameObject(testobj, testobj->GetName());
+
+
+	//Enemy objects
+	Enemy* enemyai = new Enemy;
+	enemyai->SetName("enemyAI");
+	enemyai->SetTag("enemy");
+	enemyai->AddCollidable("pbullet");
+	enemyai->SetD3DDevice(m_Graphics->GetDevice());
+	enemyai->SetTexture(m_texManager->GetTexture("enemytex"));
+	enemyai->SetModel(m_modelManager->GetModel("enemymodel"));
+	enemyai->SetPosition(7, -3.5, 5);
+	enemyai->SetRotation(0, 0.5, 0);
+	enemyai->SetScale(5.0f, 5.0f, 5.0f);
+
+	CollisionSphere* enemysp = new CollisionSphere;
+	enemysp->UpdatePosition(enemyai->GetPositionVec());
+	enemysp->SetRadius(3.0f);
+	enemyai->SetCollisionSphere(enemysp);
+	m_gameObjectManager->AddGameObject(enemyai, enemyai->GetName());
+
 
 
 	//Turret
@@ -786,7 +817,7 @@ void MoveCharacter(CameraClass* camera, GameObjectManager* gamemgr,InputClass* i
 	XMStoreFloat3(&actualCamPos, camera->GetPosition());
 	XMFLOAT3 actualGunPos = gameobj->GetPosition();
 
-	if (input->IsKeyDown(0x28)) // Move camera and weapon back
+	if (input->IsKeyDown(0x28) || input->IsKeyDown(0x53)) // Move camera and weapon back
 	{
 		// New position
 		XMVECTOR moveBack = camera->GetBackwardVector() * cameraVel * dt;
@@ -798,13 +829,35 @@ void MoveCharacter(CameraClass* camera, GameObjectManager* gamemgr,InputClass* i
 
 
 	}
-	if (input->IsKeyDown(0x26)) // Move camera and weapon forward
+	if (input->IsKeyDown(0x26) || input->IsKeyDown(0x57)) // Move camera and weapon forward
 	{
 		XMVECTOR moveForward = camera->GetForwardVector() * cameraVel * dt;
 		camera->UpdatePosition(moveForward);
 
 		moveForward = gameobj->GetForwardVector() * cameraVel * dt;
 		gameobj->UpdatePosition(moveForward);
+	}
+
+
+	if (input->IsKeyDown(0x41)) // Move camera and weapon left
+	{
+		// New position
+		XMVECTOR moveLeft = camera->GetLeftVector() * cameraVel * dt;
+
+		camera->UpdatePosition(moveLeft);
+		moveLeft = gameobj->GetLeftVector() * cameraVel * dt;
+		
+		gameobj->UpdatePosition(moveLeft);
+
+
+	}
+	if (input->IsKeyDown(0x44)) // Move camera and weapon forward
+	{
+		XMVECTOR moveRight = camera->GetRightVector() * cameraVel * dt;
+		camera->UpdatePosition(moveRight);
+
+		moveRight = gameobj->GetRightVector() * cameraVel * dt;
+		gameobj->UpdatePosition(moveRight);
 	}
 	// Store new gun position
 	XMFLOAT3 newGunPos = gameobj->GetPosition();
@@ -840,29 +893,43 @@ void TestCollision(CollisionEngine* collEngptr,GameObjectManager* gObjMgr)
 			std::string name = collObjNames[i];
 			if (collObjNames.size() > 0)
 			{
-				gObjMgr->RemoveGameObject(name);
+				//gObjMgr->RemoveGameObject(name);d
+				return;
 			}
 		}
 	}
 }
 
-void Shoot(GameObjectManager* gObjMgr,ModelManager* mMgr,TextureManager* texMgr,GraphicsClass* graphics,vector<string>& bulletsArray)
+void Shoot(GameObject* obj,GameObjectManager* gObjMgr,ModelManager* mMgr,TextureManager* texMgr,GraphicsClass* graphics,vector<string>& bulletsArray)
 {
 	Bullet* bullet = new Bullet;
 	
 	string name = "bull" + std::to_string(gObjMgr->GetGameObjects().size()) + std::to_string(std::rand() % 100 + 1);		//random name
 	bulletsArray.push_back(name);
 	bullet->SetName(name);
-	bullet->SetTag("bullet");
-	bullet->AddCollidable("bullet");
-	bullet->AddCollidable("enemy");
-	bullet->AddCollidable("player");
+	bullet->AddCollidable("ebullet");
+	bullet->AddCollidable("pbullet");
+	if (obj->m_tag == "player")
+	{
+		bullet->AddCollidable("enemy");
+		bullet->SetTag("pbullet");
+		bullet->SetTexture(texMgr->GetTexture("bullettex"));
+		bullet->SetModel(mMgr->GetModel("bulletmodel"));
+		bullet->SetScale(0.1f, 0.1f, 0.1f);
+	}
+	else if (obj->m_tag == "enemy")
+	{
+		bullet->AddCollidable("player");
+		bullet->SetTag("ebullet");
+		bullet->SetTexture(texMgr->GetTexture("fireballtex"));
+		bullet->SetModel(mMgr->GetModel("fireballmodel"));
+		bullet->SetScale(0.5f, 0.5f, 0.5f);
+	}
 	bullet->SetD3DDevice(graphics->GetDevice());
-	bullet->SetTexture(texMgr->GetTexture("bullettex"));
-	bullet->SetModel(mMgr->GetModel("bulletmodel"));
-	bullet->SetPosition(XMVectorGetX(gObjMgr->GetGameObject("gun")->GetPositionVec()), -1.0, XMVectorGetZ(gObjMgr->GetGameObject("gun")->GetPositionVec()));// under work
-	bullet->SetRotation(XMVectorGetX(gObjMgr->GetGameObject("gun")->GetRotation()), XMVectorGetY(gObjMgr->GetGameObject("gun")->GetRotation()), XMVectorGetZ(gObjMgr->GetGameObject("gun")->GetRotation()));
-	bullet->SetScale(0.1f, 0.1f, 0.1f);
+	
+	bullet->SetPosition(obj->GetPosition().x , -1.0, obj->GetPosition().z);// under work
+	bullet->SetRotation(XMVectorGetX(obj->GetRotation()), XMVectorGetY(obj->GetRotation()), XMVectorGetZ(obj->GetRotation()));
+	
 	
 
 	CollisionSphere* bullsp = new CollisionSphere;
@@ -894,13 +961,18 @@ void UpdateBulletsPosition(GameObjectManager* gObjMgr, vector<string>& bulletsAr
 {
 	for (int i = 0; i < bulletsArray.size();i++)
 	{
-
+	
 		if (gObjMgr->GetGameObject(bulletsArray.at(i)) != nullptr)
 		{
 			gObjMgr->GetGameObject(bulletsArray.at(i))->Action();
 		}
-
+	
 	}
+
+	//for (int i = 0; i < gObjMgr->GetGameObjects().size();i++)
+	//{
+	//	if()
+	//}
 }
 
 bool SystemClass::UpdateDrawGamePlay(float dt)
@@ -909,6 +981,16 @@ bool SystemClass::UpdateDrawGamePlay(float dt)
 
 	//move character each frame
 	MoveCharacter(m_camera,m_gameObjectManager,m_Input,dt);
+
+	//Check entities alive
+
+	for (auto it: m_gameObjectManager->GetGameObjects())
+	{
+		if (!it.second->Alive())
+		{
+			m_gameObjectManager->RemoveGameObject(it.first);
+		}
+	}
 
 
 	//Shoot 
@@ -919,13 +1001,30 @@ bool SystemClass::UpdateDrawGamePlay(float dt)
 		shootTimer += dt;
 	if (m_Input->IsKeyDown(0x20) && shootTimer>100.f)
 	{
-		Shoot(m_gameObjectManager, m_modelManager, m_texManager, m_Graphics,bulletsArray);
+		GameObject* obj = m_gameObjectManager->GetGameObject("gun");
+		Shoot(obj,m_gameObjectManager, m_modelManager, m_texManager, m_Graphics,bulletsArray);
 		shootTimer = 0;
 	}
 	if (bulletsArray.size() != 0)
 	{
-		CheckBulletsAlive(m_gameObjectManager, bulletsArray);
+		//CheckBulletsAlive(m_gameObjectManager, bulletsArray);
 		UpdateBulletsPosition(m_gameObjectManager, bulletsArray);
+	}
+	
+	//Chase player
+	chaseTimer += dt;
+	
+	if (chaseTimer > 20.0)
+	{
+		m_gameObjectManager->GetGameObject("enemyAI")->Action(m_gameObjectManager->GetGameObject("gun"));
+		shootTimerenemy += dt;
+		if (State::SHOOT == m_gameObjectManager->GetGameObject("enemyAI")->GetState() && shootTimerenemy >1500.0f)
+		{
+			GameObject* obj = m_gameObjectManager->GetGameObject("enemyAI");
+			Shoot(obj,m_gameObjectManager, m_modelManager, m_texManager, m_Graphics, bulletsArray);
+			shootTimerenemy = 0;
+		}
+		chaseTimer = 0;
 	}
 	
 

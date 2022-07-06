@@ -28,7 +28,7 @@ float CollisionSphere::GetRadius()
 void CollisionSphere::UpdatePosition(XMVECTOR& pos)
 {
 	m_posVec = pos;
-	XMStoreFloat3(&m_position, pos);
+	XMStoreFloat3(&m_position, m_posVec);
 	UpdateModelMatrix();
 }
 
@@ -63,7 +63,7 @@ void CollisionSphere::SetScale(float xscale, float yscale, float zscale)
 void CollisionSphere::UpdateModelMatrix()
 {
 	// Translate and rotate the model
-	this->m_modelView = XMMatrixRotationRollPitchYaw(this->m_rotation.x, this->m_rotation.y, this->m_rotation.z) * XMMatrixScaling(m_scale.x, m_scale.y, m_scale.z) * XMMatrixTranslation(this->m_position.x, this->m_position.y, this->m_position.z);
+	this->m_modelView = XMMatrixScaling(m_scale.x, m_scale.y, m_scale.z) * XMMatrixRotationRollPitchYaw(this->m_rotation.x, this->m_rotation.y, this->m_rotation.z) * XMMatrixTranslation(this->m_position.x, this->m_position.y, this->m_position.z);
 
 	XMMATRIX vecRotationMatrix = XMMatrixRotationRollPitchYaw(0.0f, this->m_rotation.y, 0.0f);
 

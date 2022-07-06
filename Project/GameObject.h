@@ -16,6 +16,14 @@ using namespace DirectX;
 
 #include "textureclass.h"
 
+
+enum class State
+{
+	PATROL,
+	CHASE,
+	SHOOT
+};
+
 class GameObject
 {
 public:
@@ -60,7 +68,10 @@ public:
 
 	virtual void Action();
 	virtual void Action(GameObject& gobj);
+	virtual void Action(GameObject* gobj);
 	virtual bool Alive();
+	virtual State GetState();
+
 
 	void ReleaseObject();
 
@@ -82,6 +93,8 @@ public:
 	TextureClass* m_texture;
 	ModelClass* m_model;
 	string m_tag;
+
+	int health;
 protected:
 
 	ID3D11Device* m_device;					// d3d handle to read & write
@@ -112,6 +125,7 @@ protected:
 	string m_name;
 	vector<string> collideList;
 	CollisionSphere* m_collisionsphere = nullptr;
+	State m_state;
 };
 
 #endif

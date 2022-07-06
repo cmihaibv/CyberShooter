@@ -16,6 +16,7 @@
     <ClCompile Include="CollisionSphere.cpp" />
     <ClCompile Include="d3dclass.cpp" />
     <ClCompile Include="DDSTextureLoader11.cpp" />
+    <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="graphicsclass.cpp" />
     <ClCompile Include="inputclass.cpp" />
@@ -38,6 +39,7 @@
     <ClInclude Include="CollisionSphere.h" />
     <ClInclude Include="d3dclass.h" />
     <ClInclude Include="DDSTextureLoader11.h" />
+    <ClInclude Include="Enemy.h" />
     <ClInclude Include="GameEntity.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Globals.h" />
