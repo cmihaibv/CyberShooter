@@ -48,7 +48,7 @@ public:
 	void SetTexture(TextureClass*);
 	ID3D11ShaderResourceView* GetTexture();
 
-
+	
 private:
 	bool InitializeBuffers(ID3D11Device*);
 	bool VertexBufferDesc(ID3D11Device*, int, DXVertexType*);

@@ -135,7 +135,7 @@ bool ModelClass::VertexBufferDesc(ID3D11Device* device, int byte, DXVertexType* 
 	D3D11_BUFFER_DESC vertexBufferDesc;
 	D3D11_SUBRESOURCE_DATA vertexData;
 	HRESULT result;
-
+	
 	// Set up the description of the static vertex buffer.
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	vertexBufferDesc.ByteWidth = byte;

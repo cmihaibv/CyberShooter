@@ -105,6 +105,40 @@ bool SystemClass::Initialize()
 	
 	return true;
 }
+void GetEnemyLocations(std::vector<XMFLOAT3>& locationlist,const char* filename)
+{
+	FILE* fp = nullptr;
+	const int bufferLenght = 255;
+	char line[bufferLenght];
+
+	fopen_s(&fp, filename, "r");
+
+	if (fp == nullptr)
+	{
+		return;
+	}
+	else
+	{
+		while (fgets(line, bufferLenght, fp))
+		{
+			std::vector<float> coords;
+
+			std::stringstream ss(line);
+			std::string token;
+			while (getline(ss, token, ','))
+			{
+				coords.push_back(std::stoi(token));
+			}
+
+			XMFLOAT3 pointcoord;
+			pointcoord.x = coords[0];
+			pointcoord.y = coords[1];
+			pointcoord.z = coords[2];
+			locationlist.push_back(pointcoord);
+		}
+	}
+	fclose(fp);
+}
 
 
 void SystemClass::InitialiseObjects()
@@ -175,66 +209,95 @@ void SystemClass::InitialiseObjects()
 	testobj->SetCollisionSphere(colsp);
 	m_gameObjectManager->AddGameObject(testobj, testobj->GetName());
 
+	//Initialise enemies
+	std::vector<XMFLOAT3> enemylocationlist;
 
-	//Enemy objects
-	Enemy* enemyai1 = new Enemy;
-	enemyai1->SetName("enemy1");
-	enemyai1->SetTag("enemy");
-	enemyai1->AddCollidable("pbullet");
-	enemyai1->SetD3DDevice(m_Graphics->GetDevice());
-	enemyai1->SetTexture(m_texManager->GetTexture("enemytex"));
-	enemyai1->SetModel(m_modelManager->GetModel("enemymodel"));
-	enemyai1->SetPosition(7, -3.5, 5);
-	enemyai1->SetRotation(0, 0.5, 0);
-	enemyai1->SetScale(5.0f, 5.0f, 5.0f);
-	enemyai1->m_health = 100;
-	enemyai1->SetShootSpeed(1500);
+	GetEnemyLocations(enemylocationlist, "../Project/data/enemyloclist.txt");
 
-	CollisionSphere* enemysp1 = new CollisionSphere;
-	enemysp1->UpdatePosition(enemyai1->GetPositionVec());
-	enemysp1->SetRadius(3.0f);
-	enemyai1->SetCollisionSphere(enemysp1);
-	m_gameObjectManager->AddGameObject(enemyai1, enemyai1->GetName());
+	for (int i = 0; i < enemylocationlist.size();i++)
+	{
+		Enemy* enemyai = new Enemy;
+		enemyai->SetName("enemy"+i);
+		enemyai->SetTag("enemy");
+		enemyai->AddCollidable("pbullet");
+		enemyai->SetD3DDevice(m_Graphics->GetDevice());
+		enemyai->SetTexture(m_texManager->GetTexture("enemytex"));
+		enemyai->SetModel(m_modelManager->GetModel("enemymodel"));
+		enemyai->SetPosition(enemylocationlist[i].x, enemylocationlist[i].y, enemylocationlist[i].z);
+		enemyai->SetRotation(0, 0.5, 0);
+		enemyai->SetScale(5.0f, 5.0f, 5.0f);
+		enemyai->m_health = 100;
+		enemyai->SetShootSpeed(1500);
 
-	Enemy* enemyai2 = new Enemy;
-	enemyai2->SetName("enemy2");
-	enemyai2->SetTag("enemy");
-	enemyai2->AddCollidable("pbullet");
-	enemyai2->SetD3DDevice(m_Graphics->GetDevice());
-	enemyai2->SetTexture(m_texManager->GetTexture("enemytex"));
-	enemyai2->SetModel(m_modelManager->GetModel("enemymodel"));
-	enemyai2->SetPosition(-10, -3.5, -5);
-	enemyai2->SetRotation(0, 0.5, 0);
-	enemyai2->SetScale(5.0f, 5.0f, 5.0f);
-	enemyai2->m_health = 100;
-	enemyai2->SetShootSpeed(1500);
+		CollisionSphere* enemysp = new CollisionSphere;
+		enemysp->UpdatePosition(enemyai->GetPositionVec());
+		enemysp->SetRadius(3.0f);
+		enemyai->SetCollisionSphere(enemysp);
+		m_gameObjectManager->AddGameObject(enemyai, enemyai->GetName());
 
-	CollisionSphere* enemysp2 = new CollisionSphere;
-	enemysp2->UpdatePosition(enemyai2->GetPositionVec());
-	enemysp2->SetRadius(3.0f);
-	enemyai2->SetCollisionSphere(enemysp2);
-	m_gameObjectManager->AddGameObject(enemyai2, enemyai2->GetName());
+		enemyArray.push_back(enemyai->GetName());
+	}
 
-	Enemy* enemyai3 = new Enemy;
-	enemyai3->SetName("enemy3");
-	enemyai3->SetTag("enemy");
-	enemyai3->AddCollidable("pbullet");
-	enemyai3->SetD3DDevice(m_Graphics->GetDevice());
-	enemyai3->SetTexture(m_texManager->GetTexture("enemytex"));
-	enemyai3->SetModel(m_modelManager->GetModel("enemymodel"));
-	enemyai3->SetPosition(-7, -3.5, 5);
-	enemyai3->SetRotation(0, 0.5, 0);
-	enemyai3->SetScale(5.0f, 5.0f, 5.0f);
-	enemyai3->m_health = 100;
-	enemyai3->SetShootSpeed(1500);
+	////Enemy objects
+	//Enemy* enemyai1 = new Enemy;
+	//enemyai1->SetName("enemy1");
+	//enemyai1->SetTag("enemy");
+	//enemyai1->AddCollidable("pbullet");
+	//enemyai1->SetD3DDevice(m_Graphics->GetDevice());
+	//enemyai1->SetTexture(m_texManager->GetTexture("enemytex"));
+	//enemyai1->SetModel(m_modelManager->GetModel("enemymodel"));
+	//enemyai1->SetPosition(7, -3.5, 5);
+	//enemyai1->SetRotation(0, 0.5, 0);
+	//enemyai1->SetScale(5.0f, 5.0f, 5.0f);
+	//enemyai1->m_health = 100;
+	//enemyai1->SetShootSpeed(1500);
 
-	CollisionSphere* enemysp3 = new CollisionSphere;
-	enemysp3->UpdatePosition(enemyai3->GetPositionVec());
-	enemysp3->SetRadius(3.0f);
-	enemyai3->SetCollisionSphere(enemysp3);
-	m_gameObjectManager->AddGameObject(enemyai3, enemyai3->GetName());
+	//CollisionSphere* enemysp1 = new CollisionSphere;
+	//enemysp1->UpdatePosition(enemyai1->GetPositionVec());
+	//enemysp1->SetRadius(3.0f);
+	//enemyai1->SetCollisionSphere(enemysp1);
+	//m_gameObjectManager->AddGameObject(enemyai1, enemyai1->GetName());
 
-	enemyArray = { enemyai1->GetName() ,enemyai2->GetName() ,enemyai3->GetName() };
+	//Enemy* enemyai2 = new Enemy;
+	//enemyai2->SetName("enemy2");
+	//enemyai2->SetTag("enemy");
+	//enemyai2->AddCollidable("pbullet");
+	//enemyai2->SetD3DDevice(m_Graphics->GetDevice());
+	//enemyai2->SetTexture(m_texManager->GetTexture("enemytex"));
+	//enemyai2->SetModel(m_modelManager->GetModel("enemymodel"));
+	//enemyai2->SetPosition(-10, -3.5, -5);
+	//enemyai2->SetRotation(0, 0.5, 0);
+	//enemyai2->SetScale(5.0f, 5.0f, 5.0f);
+	//enemyai2->m_health = 100;
+	//enemyai2->SetShootSpeed(1500);
+
+	//CollisionSphere* enemysp2 = new CollisionSphere;
+	//enemysp2->UpdatePosition(enemyai2->GetPositionVec());
+	//enemysp2->SetRadius(3.0f);
+	//enemyai2->SetCollisionSphere(enemysp2);
+	//m_gameObjectManager->AddGameObject(enemyai2, enemyai2->GetName());
+
+	//Enemy* enemyai3 = new Enemy;
+	//enemyai3->SetName("enemy3");
+	//enemyai3->SetTag("enemy");
+	//enemyai3->AddCollidable("pbullet");
+	//enemyai3->SetD3DDevice(m_Graphics->GetDevice());
+	//enemyai3->SetTexture(m_texManager->GetTexture("enemytex"));
+	//enemyai3->SetModel(m_modelManager->GetModel("enemymodel"));
+	//enemyai3->SetPosition(-7, -3.5, 5);
+	//enemyai3->SetRotation(0, 0.5, 0);
+	//enemyai3->SetScale(5.0f, 5.0f, 5.0f);
+	//enemyai3->m_health = 100;
+	//enemyai3->SetShootSpeed(1500);
+
+	//CollisionSphere* enemysp3 = new CollisionSphere;
+	//enemysp3->UpdatePosition(enemyai3->GetPositionVec());
+	//enemysp3->SetRadius(3.0f);
+	//enemyai3->SetCollisionSphere(enemysp3);
+	//m_gameObjectManager->AddGameObject(enemyai3, enemyai3->GetName());
+
+
+	
 
 
 
