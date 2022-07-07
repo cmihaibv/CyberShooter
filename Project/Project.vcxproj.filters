@@ -90,6 +90,12 @@
     <ClCompile Include="Enemy.cpp">
       <Filter>GameEngine</Filter>
     </ClCompile>
+    <ClCompile Include="Waypoint.cpp">
+      <Filter>GameEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Waypoints.cpp">
+      <Filter>GameEngine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cameraclass.h">
@@ -159,6 +165,12 @@
       <Filter>GameEngine</Filter>
     </ClInclude>
     <ClInclude Include="Enemy.h">
+      <Filter>GameEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Waypoint.h">
+      <Filter>GameEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Waypoints.h">
       <Filter>GameEngine</Filter>
     </ClInclude>
   </ItemGroup>

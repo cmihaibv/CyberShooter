@@ -8,6 +8,7 @@
 #include <fstream>
 #include "modelclass.h"
 #include "CollisionSphere.h"
+#include "Waypoints.h"
 
 
 using namespace std;

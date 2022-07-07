@@ -15,35 +15,85 @@ Enemy::Enemy()
 }
 void Enemy::Action()
 {
+
+	XMFLOAT3 newVector;
+	XMVECTOR newVecForward;
+	float distance;
 	// chase player 
 	//update forward vector
-	XMFLOAT3 newVector = { m_target->GetPosition().x - this->GetPosition().x,
-		0,
-		m_target->GetPosition().z - this->GetPosition().z };
-
-	XMVECTOR newVecForward = XMLoadFloat3(&newVector);
-	newVecForward = XMVector3Normalize(newVecForward);
-	if (!XMVector3Equal(m_vecForward,newVecForward))
+	switch (m_state)
 	{
-		XMVECTOR rot = XMVector3AngleBetweenVectors(m_DefaultForwardVec, newVecForward);
-		if ((XMVectorGetX(newVecForward) < 0 && XMVectorGetZ(newVecForward) < 0) || XMVectorGetX(newVecForward) < 0)
-			rot = XMVectorSet(6.28319-XMVectorGetX(rot), 6.28319- XMVectorGetY(rot), 6.28319- XMVectorGetZ(rot), 6.28319- XMVectorGetW(rot));
+	case State::PATROL:
+		if (m_waypoints.m_waypoints.size() == 0)
+		{
+			break;
+		}
+		newVector = { m_waypoints.GetCurrentCoords().x - this->GetPosition().x,
+								0,
+								m_waypoints.GetCurrentCoords().z - this->GetPosition().z };
 
-		this->UpdateRotation(rot);
-		m_vecForward = newVecForward;
-	}
+		newVecForward = XMLoadFloat3(&newVector);
+		newVecForward = XMVector3Normalize(newVecForward);
+		if (!XMVector3Equal(m_vecForward, newVecForward))
+		{
+			XMVECTOR rot = XMVector3AngleBetweenVectors(m_DefaultForwardVec, newVecForward);
+			if ((XMVectorGetX(newVecForward) < 0 && XMVectorGetZ(newVecForward) < 0) || XMVectorGetX(newVecForward) < 0)
+				rot = XMVectorSet(6.28319 - XMVectorGetX(rot), 6.28319 - XMVectorGetY(rot), 6.28319 - XMVectorGetZ(rot), 6.28319 - XMVectorGetW(rot));
+
+			this->UpdateRotation(rot);
+			m_vecForward = newVecForward;
+		}
 
 
-	//move closer 
-	float distance = sqrt((m_position.x - m_target->GetPosition().x) * (m_position.x - m_target->GetPosition().x)
-		+ (m_position.y - m_target->GetPosition().y) * (m_position.y - m_target->GetPosition().y)
-		+ (m_position.z - m_target->GetPosition().z) * (m_position.z - m_target->GetPosition().z));
+		//move closer 
+		distance = sqrt((m_position.x - m_waypoints.GetCurrentCoords().x) * (m_position.x - m_waypoints.GetCurrentCoords().x)
+			+ (m_position.y - m_waypoints.GetCurrentCoords().y) * (m_position.y - m_waypoints.GetCurrentCoords().y)
+			+ (m_position.z - m_waypoints.GetCurrentCoords().z) * (m_position.z - m_waypoints.GetCurrentCoords().z));
 
-	if (distance < m_detectionDistance && distance >m_attackDistance)
-	{
+		
+
+		if (distance < 0.45)
+		{
+			m_waypoints.UpdateWaypoint();
+			break;
+		}
 		XMVECTOR newVec = m_vecForward * 0.05;
 		UpdatePosition(newVec);
+		break;
+	case State::CHASE:
+		newVector = { m_target->GetPosition().x - this->GetPosition().x,
+								0,
+								m_target->GetPosition().z - this->GetPosition().z };
+
+		newVecForward = XMLoadFloat3(&newVector);
+		newVecForward = XMVector3Normalize(newVecForward);
+		if (!XMVector3Equal(m_vecForward, newVecForward))
+		{
+			XMVECTOR rot = XMVector3AngleBetweenVectors(m_DefaultForwardVec, newVecForward);
+			if ((XMVectorGetX(newVecForward) < 0 && XMVectorGetZ(newVecForward) < 0) || XMVectorGetX(newVecForward) < 0)
+				rot = XMVectorSet(6.28319 - XMVectorGetX(rot), 6.28319 - XMVectorGetY(rot), 6.28319 - XMVectorGetZ(rot), 6.28319 - XMVectorGetW(rot));
+
+			this->UpdateRotation(rot);
+			m_vecForward = newVecForward;
+		}
+
+
+		//move closer 
+		distance = sqrt((m_position.x - m_target->GetPosition().x) * (m_position.x - m_target->GetPosition().x)
+			+ (m_position.y - m_target->GetPosition().y) * (m_position.y - m_target->GetPosition().y)
+			+ (m_position.z - m_target->GetPosition().z) * (m_position.z - m_target->GetPosition().z));
+
+		if (distance < m_detectionDistance && distance >m_attackDistance)
+		{
+			XMVECTOR newVec = m_vecForward * 0.05;
+			UpdatePosition(newVec);
+		}
+		break;
+	case State::SHOOT:
+		break;
 	}
+
+
 }
 
 void Enemy::Action(GameObject& obj)
@@ -68,7 +118,7 @@ void Enemy::Action(GameObject& obj)
 	if (distance > m_detectionDistance)
 	{
 		m_state = State::PATROL;
-		//m_target = nullptr;
+		m_target = nullptr;
 	}
 	Action();
 }		
@@ -100,4 +150,9 @@ void Enemy::Action(GameObject* obj)
 State Enemy::GetState()
 {
 	return m_state;
+}
+
+void Enemy::AddWaypoints(float xcoord, float ycoord, float zcoord)
+{
+	m_waypoints.AddWaypoint(xcoord, ycoord, zcoord);
 }

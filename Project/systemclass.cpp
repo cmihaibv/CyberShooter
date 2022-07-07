@@ -91,9 +91,8 @@ bool SystemClass::Initialize()
 	}
 
 	m_camera->InitialiseProjection(screenWidth, screenHeight, SCREEN_NEAR, SCREEN_DEPTH);
-
 	// Set the initial position of the camera.
-	m_camera->SetPosition(-30.0f, 0.0f, -30.0f);
+	m_camera->SetPosition(46.29f, 0.0f, 44.13f);
 
 	// Send camera in Graphics
 	m_Graphics->SetCamera(m_camera);
@@ -152,6 +151,7 @@ void SystemClass::InitialiseObjects()
 	m_texManager->InitialiseTexture("cctvtex", L"data/CCTV_lambert2SG_BaseColor.dds");
 	m_texManager->InitialiseTexture("fireballtex", L"data/Lava005_2K_Color.dds");
 	
+	
 
 
 	// Load models
@@ -162,6 +162,7 @@ void SystemClass::InitialiseObjects()
 	m_modelManager->InitialiseModel("turretmodel", "data/Turret.obj");
 	m_modelManager->InitialiseModel("cctvmodel", "data/CCTV.obj");
 	m_modelManager->InitialiseModel("fireballmodel", "data/fireball.obj");
+	m_modelManager->InitialiseModel("healthboxmodel", "data/fireball.obj");
 
 	// Create gameobjects
 	GameObject* map = new GameObject;
@@ -192,22 +193,7 @@ void SystemClass::InitialiseObjects()
 	gun->SetCollisionSphere(guncoll);
 	m_gameObjectManager->AddGameObject(gun, gun->GetName());
 
-	//Enemy objects
-	GameObject* testobj = new GameObject;
-	testobj->SetName("testobj");
-	testobj->SetTag("enemy");
-	testobj->SetD3DDevice(m_Graphics->GetDevice());
-	testobj->SetTexture(m_texManager->GetTexture("enemytex"));
-	testobj->SetModel(m_modelManager->GetModel("enemymodel"));
-	testobj->SetPosition(3,-3.5, 5);
-	testobj->SetRotation(0, 0, 0);
-	testobj->SetScale(5.0f, 5.0f, 5.0f);
-	
-	CollisionSphere* colsp = new CollisionSphere;
-	colsp->UpdatePosition(testobj->GetPositionVec());
-	colsp->SetRadius(3.0f);
-	testobj->SetCollisionSphere(colsp);
-	m_gameObjectManager->AddGameObject(testobj, testobj->GetName());
+	////Enemy objects
 
 	//Initialise enemies
 	std::vector<XMFLOAT3> enemylocationlist;
@@ -216,14 +202,16 @@ void SystemClass::InitialiseObjects()
 
 	for (int i = 0; i < enemylocationlist.size();i++)
 	{
+		string name = "enemy" + std::to_string(i);
+
 		Enemy* enemyai = new Enemy;
-		enemyai->SetName("enemy"+i);
+		enemyai->SetName(name);
 		enemyai->SetTag("enemy");
 		enemyai->AddCollidable("pbullet");
 		enemyai->SetD3DDevice(m_Graphics->GetDevice());
 		enemyai->SetTexture(m_texManager->GetTexture("enemytex"));
 		enemyai->SetModel(m_modelManager->GetModel("enemymodel"));
-		enemyai->SetPosition(enemylocationlist[i].x, enemylocationlist[i].y, enemylocationlist[i].z);
+		enemyai->SetPosition(enemylocationlist[i].x, -3.5, enemylocationlist[i].z);
 		enemyai->SetRotation(0, 0.5, 0);
 		enemyai->SetScale(5.0f, 5.0f, 5.0f);
 		enemyai->m_health = 100;
@@ -232,74 +220,52 @@ void SystemClass::InitialiseObjects()
 		CollisionSphere* enemysp = new CollisionSphere;
 		enemysp->UpdatePosition(enemyai->GetPositionVec());
 		enemysp->SetRadius(3.0f);
+		
+		//add waypoints for some of them
+		if (enemyai->GetName() == "enemy0")
+		{
+			enemyai->AddWaypoints(31.9350567, -3.5, 29.8508911);
+			enemyai->AddWaypoints(32.7497559, -3.5,18.0266361);
+			enemyai->AddWaypoints(46.4857445, -3.5,18.7030354);
+		}
+		if (enemyai->GetName() == "enemy1")
+		{
+			enemyai->SetTag("enemyboss");
+			enemyai->SetPosition(-0.50, -3.5, -5.24);
+			enemyai->SetScale(10.0f, 10.0f, 10.0f);
+			enemyai->m_health = 1000;
+			enemyai->SetShootSpeed(800);
+			enemysp->SetRadius(5.0f);
+		}
 		enemyai->SetCollisionSphere(enemysp);
 		m_gameObjectManager->AddGameObject(enemyai, enemyai->GetName());
 
 		enemyArray.push_back(enemyai->GetName());
 	}
 
-	////Enemy objects
-	//Enemy* enemyai1 = new Enemy;
-	//enemyai1->SetName("enemy1");
-	//enemyai1->SetTag("enemy");
-	//enemyai1->AddCollidable("pbullet");
-	//enemyai1->SetD3DDevice(m_Graphics->GetDevice());
-	//enemyai1->SetTexture(m_texManager->GetTexture("enemytex"));
-	//enemyai1->SetModel(m_modelManager->GetModel("enemymodel"));
-	//enemyai1->SetPosition(7, -3.5, 5);
-	//enemyai1->SetRotation(0, 0.5, 0);
-	//enemyai1->SetScale(5.0f, 5.0f, 5.0f);
-	//enemyai1->m_health = 100;
-	//enemyai1->SetShootSpeed(1500);
+	///*Enemy* enemyai = new Enemy;
+	//enemyai->SetName("enemyboss");
+	//enemyai->SetTag("enemyboss");
+	//enemyai->AddCollidable("pbullet");
+	//enemyai->SetD3DDevice(m_Graphics->GetDevice());
+	//enemyai->SetTexture(m_texManager->GetTexture("enemytex"));
+	//enemyai->SetModel(m_modelManager->GetModel("enemymodel"));
+	//enemyai->SetPosition(0.735666871, -3.5, -3.65022087);
+	//enemyai->SetRotation(0, 0.5, 0);
+	//enemyai->SetScale(10.0f, 10.0f, 10.0f);
+	//enemyai->m_health = 1000;
+	//enemyai->SetShootSpeed(800);
 
-	//CollisionSphere* enemysp1 = new CollisionSphere;
-	//enemysp1->UpdatePosition(enemyai1->GetPositionVec());
-	//enemysp1->SetRadius(3.0f);
-	//enemyai1->SetCollisionSphere(enemysp1);
-	//m_gameObjectManager->AddGameObject(enemyai1, enemyai1->GetName());
+	//CollisionSphere* enemysp = new CollisionSphere;
+	//enemysp->UpdatePosition(enemyai->GetPositionVec());
+	//enemysp->SetRadius(5.0f);
+	//enemyai->SetCollisionSphere(enemysp);
 
-	//Enemy* enemyai2 = new Enemy;
-	//enemyai2->SetName("enemy2");
-	//enemyai2->SetTag("enemy");
-	//enemyai2->AddCollidable("pbullet");
-	//enemyai2->SetD3DDevice(m_Graphics->GetDevice());
-	//enemyai2->SetTexture(m_texManager->GetTexture("enemytex"));
-	//enemyai2->SetModel(m_modelManager->GetModel("enemymodel"));
-	//enemyai2->SetPosition(-10, -3.5, -5);
-	//enemyai2->SetRotation(0, 0.5, 0);
-	//enemyai2->SetScale(5.0f, 5.0f, 5.0f);
-	//enemyai2->m_health = 100;
-	//enemyai2->SetShootSpeed(1500);
+	//m_gameObjectManager->AddGameObject(enemyai, enemyai->GetName());
 
-	//CollisionSphere* enemysp2 = new CollisionSphere;
-	//enemysp2->UpdatePosition(enemyai2->GetPositionVec());
-	//enemysp2->SetRadius(3.0f);
-	//enemyai2->SetCollisionSphere(enemysp2);
-	//m_gameObjectManager->AddGameObject(enemyai2, enemyai2->GetName());
-
-	//Enemy* enemyai3 = new Enemy;
-	//enemyai3->SetName("enemy3");
-	//enemyai3->SetTag("enemy");
-	//enemyai3->AddCollidable("pbullet");
-	//enemyai3->SetD3DDevice(m_Graphics->GetDevice());
-	//enemyai3->SetTexture(m_texManager->GetTexture("enemytex"));
-	//enemyai3->SetModel(m_modelManager->GetModel("enemymodel"));
-	//enemyai3->SetPosition(-7, -3.5, 5);
-	//enemyai3->SetRotation(0, 0.5, 0);
-	//enemyai3->SetScale(5.0f, 5.0f, 5.0f);
-	//enemyai3->m_health = 100;
-	//enemyai3->SetShootSpeed(1500);
-
-	//CollisionSphere* enemysp3 = new CollisionSphere;
-	//enemysp3->UpdatePosition(enemyai3->GetPositionVec());
-	//enemysp3->SetRadius(3.0f);
-	//enemyai3->SetCollisionSphere(enemysp3);
-	//m_gameObjectManager->AddGameObject(enemyai3, enemyai3->GetName());
-
-
+	//enemyArray.push_back(enemyai->GetName());*/
 	
-
-
+	
 
 	//Turret
 	GameObject* turret = new GameObject;
@@ -1026,6 +992,8 @@ void Shoot(GameObject* obj,GameObjectManager* gObjMgr,ModelManager* mMgr,Texture
 	bullet->SetName(name);
 	bullet->AddCollidable("ebullet");
 	bullet->AddCollidable("pbullet");
+	bullet->m_health = 1;
+	bullet->SetDamage(15);
 	if (obj->m_tag == "player" || obj->m_tag=="turret")
 	{
 		bullet->AddCollidable("enemy");
@@ -1042,9 +1010,19 @@ void Shoot(GameObject* obj,GameObjectManager* gObjMgr,ModelManager* mMgr,Texture
 		bullet->SetModel(mMgr->GetModel("fireballmodel"));
 		bullet->SetScale(0.5f, 0.5f, 0.5f);
 	}
+	else if (obj->m_tag == "enemyboss")
+	{
+		bullet->AddCollidable("player");
+		bullet->SetTag("ebullet");
+		bullet->SetTexture(texMgr->GetTexture("fireballtex"));
+		bullet->SetModel(mMgr->GetModel("fireballmodel"));
+		bullet->SetScale(0.7f, 0.7f, 0.7f);
+		bullet->m_health = 45;
+		bullet->SetDamage(30);
+
+	}
 	bullet->SetD3DDevice(graphics->GetDevice());
-	bullet->m_health = 1;
-	bullet->SetDamage(15);
+	
 	bullet->SetPosition(obj->GetPosition().x , -1.0, obj->GetPosition().z);// under work
 	bullet->SetRotation(XMVectorGetX(obj->GetRotation()), XMVectorGetY(obj->GetRotation()), XMVectorGetZ(obj->GetRotation()));
 	
@@ -1097,8 +1075,7 @@ bool SystemClass::UpdateDrawGamePlay(float dt)
 {
 	bool result;
 
-	//move character each frame
-	MoveCharacter(m_camera,m_gameObjectManager,m_Input,dt);
+	
 
 	//Check entities alive
 
@@ -1106,10 +1083,16 @@ bool SystemClass::UpdateDrawGamePlay(float dt)
 	{
 		if (it.second->Alive()==false)
 		{
+			if (m_gameObjectManager->GetGameObject(it.first)->m_tag == "player")
+			{
+				return false;
+			}
 			m_gameObjectManager->RemoveGameObject(it.first);
 		}
 	}
-
+	
+	//move character each frame
+	MoveCharacter(m_camera, m_gameObjectManager, m_Input, dt);
 
 	//Shoot 
 
@@ -1170,6 +1153,7 @@ bool SystemClass::UpdateDrawGamePlay(float dt)
 
 
 	result = m_Graphics->Frame();
+
 	return result;
 }
 

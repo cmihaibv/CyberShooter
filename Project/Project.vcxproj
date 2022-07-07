@@ -31,6 +31,8 @@
     <ClCompile Include="textureclass.cpp" />
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="Waypoint.cpp" />
+    <ClCompile Include="Waypoints.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bullet.h" />
@@ -56,6 +58,8 @@
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="tiny_obj_loader.h" />
+    <ClInclude Include="Waypoint.h" />
+    <ClInclude Include="Waypoints.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="PixelShader.hlsl">
